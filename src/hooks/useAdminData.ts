@@ -79,17 +79,18 @@ export const useAdminData = () => {
   const saveItem = async (collectionId: string, data: any, id?: string) => {
     setIsLoading(true);
     try {
+      let response;
       if (id) {
         // Ensure the ID is part of the data object for the service
-        await BaseCrudService.update(collectionId, { ...data, _id: id });
+        response = await BaseCrudService.update(collectionId, { ...data, _id: id });
       } else {
-        await BaseCrudService.create(collectionId, data);
+        response = await BaseCrudService.create(collectionId, data);
       }
       await loadAllData();
-      return true;
+      return response;
     } catch (err) {
       console.error('Save failed:', err);
-      return false;
+      return null;
     } finally {
       setIsLoading(false);
     }

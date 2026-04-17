@@ -142,6 +142,8 @@ app.patch('/api/cms/:collectionId/:itemId', async (req, res) => {
     const { _id, ...updateData } = itemData
 
     const collection = getCollection(collectionId)
+    console.log(`[DB] Updating ${collectionId}:${itemId}`)
+    
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(itemId) },
       {
@@ -170,13 +172,15 @@ app.delete('/api/cms/:collectionId/:itemId', async (req, res) => {
     const { collectionId, itemId } = req.params
 
     const collection = getCollection(collectionId)
+    console.log(`[DB] Deleting ${collectionId}:${itemId}`)
+
     const result = await collection.findOneAndDelete({ _id: new ObjectId(itemId) })
 
-    if (!result.value) {
+    if (!result) {
       return res.status(404).json({ error: 'Not found' })
     }
 
-    res.json(result.value)
+    res.json(result)
   } catch (error) {
     console.error('DELETE error:', error)
     res.status(500).json({ error: error.message })

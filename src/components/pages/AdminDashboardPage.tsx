@@ -73,21 +73,20 @@ export default function AdminDashboardPage() {
     let idToUpdate = selectedItem?._id;
     
     // Save the primary item
-    const success = await saveItem(activeTab, data, idToUpdate);
+    const savedItem = await saveItem(activeTab, data, idToUpdate);
+    const success = !!savedItem;
+    const finalId = idToUpdate || savedItem?._id;
     
     // Cross-Collection logic for Neural Profiles mapping to Projects
-    if (success && activeTab === 'users' && assignedProjectIds) {
-       // We must update the `userId` field on every project.
-       // Note: In a production app with thousands of projects, this should be done via a custom backend API.
-       // Since this is a CMS, we update the matched projects.
+    if (success && activeTab === 'users' && assignedProjectIds && finalId) {
        try {
            const allProjs = await BaseCrudService.getAll<any>('projects');
            for (const proj of allProjs.items) {
                const shouldOwn = assignedProjectIds.includes(proj._id);
-               const currentlyOwns = proj.userId === idToUpdate;
+               const currentlyOwns = proj.userId === finalId;
                
                if (shouldOwn && !currentlyOwns) {
-                   await BaseCrudService.update('projects', { ...proj, userId: idToUpdate });
+                   await BaseCrudService.update('projects', { ...proj, userId: finalId });
                } else if (!shouldOwn && currentlyOwns) {
                    await BaseCrudService.update('projects', { ...proj, userId: null });
                }
