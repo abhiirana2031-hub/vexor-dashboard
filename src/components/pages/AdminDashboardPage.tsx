@@ -87,9 +87,9 @@ export default function AdminDashboardPage() {
                const currentlyOwns = proj.userId === idToUpdate;
                
                if (shouldOwn && !currentlyOwns) {
-                   await BaseCrudService.update('projects', proj._id, { ...proj, userId: idToUpdate });
+                   await BaseCrudService.update('projects', { ...proj, userId: idToUpdate });
                } else if (!shouldOwn && currentlyOwns) {
-                   await BaseCrudService.update('projects', proj._id, { ...proj, userId: null });
+                   await BaseCrudService.update('projects', { ...proj, userId: null });
                }
            }
        } catch (err) {

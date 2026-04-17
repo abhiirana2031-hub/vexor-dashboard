@@ -147,17 +147,17 @@ app.patch('/api/cms/:collectionId/:itemId', async (req, res) => {
       {
         $set: {
           ...updateData,
-          updatedAt: new Date(),
+          _updatedDate: new Date(),
         },
       },
       { returnDocument: 'after' }
     )
 
-    if (!result.value) {
+    if (!result) {
       return res.status(404).json({ error: 'Not found' })
     }
 
-    res.json(result.value)
+    res.json(result)
   } catch (error) {
     console.error('PATCH error:', error)
     res.status(500).json({ error: error.message })
