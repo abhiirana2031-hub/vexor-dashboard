@@ -80,7 +80,8 @@ export const useAdminData = () => {
     setIsLoading(true);
     try {
       if (id) {
-        await BaseCrudService.update(collectionId, id, data);
+        // Ensure the ID is part of the data object for the service
+        await BaseCrudService.update(collectionId, { ...data, _id: id });
       } else {
         await BaseCrudService.create(collectionId, data);
       }

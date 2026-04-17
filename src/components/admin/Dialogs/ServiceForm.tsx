@@ -17,6 +17,7 @@ export const ServiceForm = ({ service, onSave, onCancel, isSaving }: ServiceForm
     serviceName: service?.serviceName || '',
     serviceDescription: service?.serviceDescription || '',
     serviceIcon: service?.serviceIcon || '',
+    serviceImage: service?.serviceImage || '',
     serviceDetailedDescription: service?.serviceDetailedDescription || '',
   });
 
@@ -36,6 +37,14 @@ export const ServiceForm = ({ service, onSave, onCancel, isSaving }: ServiceForm
             placeholder="e.g., Quantum Data Analysis"
             className="bg-white/[0.02] border-white/10 rounded-xl"
             required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[9px] font-black uppercase tracking-widest text-foreground/40 pl-4 border-l border-secondary">Service Node Photo (URL or Upload)</Label>
+          <ImageUpload 
+            value={formData.serviceImage || ''}
+            onChange={(url) => setFormData({...formData, serviceImage: url})}
           />
         </div>
 
