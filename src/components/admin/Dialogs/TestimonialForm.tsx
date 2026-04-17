@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Testimonials as TestimonialType } from '@/entities';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';

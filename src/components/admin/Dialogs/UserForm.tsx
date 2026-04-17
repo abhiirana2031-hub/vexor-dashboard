@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfiles as UserType, Projects } from '@/entities';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
 import { Check } from 'lucide-react';
 import { BaseCrudService } from '@/integrations';

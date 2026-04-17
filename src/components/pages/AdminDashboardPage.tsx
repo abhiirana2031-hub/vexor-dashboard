@@ -24,9 +24,9 @@ import { TestimonialForm } from '@/components/admin/Dialogs/TestimonialForm';
 import { BaseCrudService } from '@/integrations';
 
 // Original UI (Simplified for reuse or placeholders)
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Trash2 } from 'lucide-react';

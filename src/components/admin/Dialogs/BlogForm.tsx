@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Blogs as BlogType } from '@/entities';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/admin/ImageUpload';
