@@ -1,0 +1,121 @@
+@layer base {
+  body {
+    @apply bg-[#03050a] text-foreground antialiased selection:bg-secondary/30 selection:text-secondary-foreground;
+  }
+}
+
+/* Futuristic Minimalist Components - Dark Mode (Original) */
+@layer components {
+  /* Refined Glassmorphism with Depth */
+  .glass-effect {
+    @apply backdrop-blur-[16px] bg-white/[0.02] border border-white/[0.05] rounded-3xl shadow-soft-depth relative;
+    /* Keeping overflow-hidden removal to prevent menu clipping */
+  }
+
+  .glass-effect::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-50 pointer-events-none;
+  }
+
+  .glass-card {
+    @apply glass-effect p-8 sm:p-10 transition-all duration-500 overflow-hidden;
+  }
+
+  .glass-card-hover {
+    @apply glass-card hover:bg-white/[0.04] hover:border-secondary/20 hover:shadow-neon-cyan/10 cursor-pointer;
+  }
+
+  /* Ambient Lighting & Glows */
+  .ambient-glow {
+    @apply absolute -z-10 blur-[120px] opacity-30 animate-mesh-panning;
+  }
+
+  .neon-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-secondary via-white to-secondary animate-text-shimmer bg-[length:200%_auto] font-black;
+  }
+
+  /* Cyber Grid with Depth */
+  .cyber-grid {
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 90%);
+  }
+
+  /* Scanner Effect Surface */
+  .scanner-surface {
+    @apply relative overflow-hidden;
+  }
+
+  .scanner-surface::after {
+    content: '';
+    @apply absolute inset-x-0 h-[100px] bg-gradient-to-b from-transparent via-secondary/10 to-transparent -top-[100px] animate-scanner pointer-events-none;
+  }
+
+  /* Glass Noise Texture */
+  .glass-noise {
+    position: relative;
+  }
+
+  .glass-noise::after {
+    content: "";
+    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Futuristic Button - Minimalist Style */
+  .futuristic-button {
+    @apply relative px-10 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-xs overflow-hidden transition-all duration-500 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-secondary/40 shadow-soft-depth;
+  }
+
+  .futuristic-button .btn-glow {
+    @apply absolute -inset-full bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-45 translate-x-[-100%] transition-transform duration-1000;
+  }
+}
+
+@layer utilities {
+  .shadow-soft-depth {
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 217, 255, 0.05);
+  }
+}
+
+/* Custom Scrollbar - Cyber Style */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#03050a];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-secondary/40 transition-colors;
+}
+
+/* Smooth Navigation */
+html {
+  scroll-behavior: smooth;
+  font-size: 85%; /* Global scaling to 85% */
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 85%; /* Specifically ensure 85% on desktop */
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 80%; /* Slightly smaller on mobile to ensure content fits */
+  }
+}
+
+/* Animations Helper */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
