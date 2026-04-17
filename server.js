@@ -4,6 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import fs from 'fs'
 
 dotenv.config()
 
@@ -23,9 +24,11 @@ app.use(cors())
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'dist')))
+// Serve static files
+const distPath = path.join(__dirname, 'dist')
+if (fs.existsSync(distPath)) {
+  console.log('✓ Serving static files from:', distPath)
+  app.use(express.static(distPath))
 }
 
 // MongoDB Connection
@@ -187,10 +190,10 @@ app.delete('/api/cms/:collectionId/:itemId', async (req, res) => {
   }
 })
 
-// Catch-all route to serve React app in production
-if (process.env.NODE_ENV === 'production') {
+// Catch-all route to serve React app
+if (fs.existsSync(distPath)) {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+    res.sendFile(path.join(distPath, 'index.html'))
   })
 }
 
