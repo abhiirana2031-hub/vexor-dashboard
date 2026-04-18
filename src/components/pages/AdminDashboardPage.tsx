@@ -235,6 +235,10 @@ export default function AdminDashboardPage() {
               </div>
            </div>
          </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#03050a] flex items-center justify-center relative overflow-hidden font-paragraph py-8 px-4">
       {/* Global Background Elements */}
