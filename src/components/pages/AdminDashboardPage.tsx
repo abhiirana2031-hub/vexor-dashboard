@@ -73,7 +73,13 @@ export default function AdminDashboardPage() {
     let idToUpdate = selectedItem?._id;
     
     // Save the primary item
-    const savedItem = await saveItem(activeTab, data, idToUpdate);
+    const collectionMap: Record<string, string> = {
+      'users': 'userprofiles',
+      'team': 'teammembers',
+    };
+    const collectionId = collectionMap[activeTab] || activeTab;
+
+    const savedItem = await saveItem(collectionId, data, idToUpdate);
     const success = !!savedItem;
     const finalId = idToUpdate || savedItem?._id;
     
