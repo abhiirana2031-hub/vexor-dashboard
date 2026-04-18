@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TeamMembers as TeamType } from '@/entities';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +22,18 @@ export const TeamForm = ({ member, onSave, onCancel, isSaving }: TeamFormProps) 
     email: member?.email || '',
     displayOrder: member?.displayOrder || 0,
   });
+
+  useEffect(() => {
+    setFormData({
+      fullName: member?.fullName || '',
+      jobTitle: member?.jobTitle || '',
+      profilePhoto: member?.profilePhoto || '',
+      bio: member?.bio || '',
+      linkedInUrl: member?.linkedInUrl || '',
+      email: member?.email || '',
+      displayOrder: member?.displayOrder || 0,
+    });
+  }, [member]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

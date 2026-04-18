@@ -25,6 +25,14 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
 
   useEffect(() => {
+    // Sync formData when user changes
+    setFormData({
+      fullName: user?.fullName || '',
+      email: user?.email || '',
+      passwordHash: '',
+      googleId: user?.googleId || '',
+    });
+
     // Fetch all projects to let the admin assign them to this user
     BaseCrudService.getAll<Projects>('projects')
       .then(res => {

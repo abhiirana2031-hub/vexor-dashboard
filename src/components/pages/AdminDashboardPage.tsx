@@ -335,22 +335,22 @@ export default function AdminDashboardPage() {
           </DialogHeader>
           
           {activeTab === 'projects' && (
-             <ProjectForm project={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <ProjectForm key={selectedItem?._id || 'new'} project={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
           {activeTab === 'services' && (
-             <ServiceForm service={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <ServiceForm key={selectedItem?._id || 'new'} service={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
           {activeTab === 'blogs' && (
-             <BlogForm blog={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <BlogForm key={selectedItem?._id || 'new'} blog={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
           {activeTab === 'team' && (
-             <TeamForm member={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <TeamForm key={selectedItem?._id || 'new'} member={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
           {activeTab === 'users' && (
-             <UserForm user={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <UserForm key={selectedItem?._id || 'new'} user={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
           {activeTab === 'testimonials' && (
-             <TestimonialForm testimonial={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <TestimonialForm key={selectedItem?._id || 'new'} testimonial={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
           {!['projects', 'services', 'blogs', 'team', 'users', 'testimonials'].includes(activeTab) && (
             <div className="py-12 text-center space-y-6">
