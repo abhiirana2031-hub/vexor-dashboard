@@ -13,6 +13,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
+app.set('trust proxy', true) // Required for correct 'https' detection on Render/proxies
 const PORT = process.env.PORT || 3001
 const MONGODB_URI = process.env.MONGODB_URI
 const MONGODB_DB = process.env.MONGODB_DB || 'vexora'
@@ -95,7 +96,11 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     return res.status(400).json({ error: 'No file uploaded' })
   }
   
-  const url = `/uploads/${req.file.filename}`
+  // Construct absolute URL so other sites (like your live site) can access the images
+  const protocol = req.protocol
+  const host = req.get('host')
+  const url = `${protocol}://${host}/uploads/${req.file.filename}`
+  
   res.json({ url })
 })
 
