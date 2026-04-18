@@ -44,10 +44,10 @@ export const useAdminData = () => {
         uRes, 
         aRes
       ] = await Promise.all([
-        BaseCrudService.getAll<Projects>('projects'),
-        BaseCrudService.getAll<Services>('services'),
-        BaseCrudService.getAll<TeamMembers>('teammembers'),
-        BaseCrudService.getAll<Testimonials>('testimonials'),
+        BaseCrudService.getAll<Projects>('projects').catch(() => ({ items: [] })),
+        BaseCrudService.getAll<Services>('services').catch(() => ({ items: [] })),
+        BaseCrudService.getAll<TeamMembers>('teammembers').catch(() => ({ items: [] })),
+        BaseCrudService.getAll<Testimonials>('testimonials').catch(() => ({ items: [] })),
         BaseCrudService.getAll<any>('enquiries').catch(() => ({ items: [] })),
         fetch('/api/sitestats').then(r => r.json()).catch(() => ({})),
         BaseCrudService.getAll<Blogs>('blogs').catch(() => ({ items: [] })),
@@ -55,10 +55,10 @@ export const useAdminData = () => {
         BaseCrudService.getAll<AuditLogs>('auditlogs').catch(() => ({ items: [] }))
       ]);
 
-      setProjects(pRes.items);
-      setServices(sRes.items);
-      setTeamMembers(tRes.items);
-      setTestimonials(testRes.items);
+      setProjects(pRes.items || []);
+      setServices(sRes.items || []);
+      setTeamMembers(tRes.items || []);
+      setTestimonials(testRes.items || []);
       setEnquiries(eRes.items || []);
       setBlogs(bRes.items || []);
       setUsers(uRes.items || []);
@@ -66,6 +66,7 @@ export const useAdminData = () => {
       setSiteStats(statRes);
     } catch (error) {
       console.error('Error loading admin data:', error);
+    } finally {
       setIsLoading(false);
     }
   };
