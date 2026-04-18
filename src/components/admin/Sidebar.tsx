@@ -42,13 +42,13 @@ export const Sidebar = ({ onSetActiveTab, activeTab }: SidebarProps) => {
     <div className="h-full bg-background border-r border-white/5 flex flex-col relative preserve-3d">
       {/* Logo Section */}
       <div className="p-8 pb-12">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/30 flex items-center justify-center overflow-hidden">
-            <img src="/vexor-logo.png" alt="Vexor Logo" className="w-7 h-7 object-contain" />
+        <div className="flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-xl bg-black/40 border border-secondary/20 flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:border-secondary shadow-lg">
+            <img src="/vexor-logo.png" alt="Vexor Logo" className="w-8 h-8 object-contain" />
           </div>
           <div>
-            <h1 className="font-heading font-black text-xl tracking-tighter text-foreground">VEXOR</h1>
-            <p className="text-[8px] font-black uppercase tracking-[0.4em] text-secondary">Control_Panel v2.4</p>
+            <h1 className="font-heading font-black text-xl tracking-tighter text-foreground group-hover:text-secondary transition-colors">VEXOR</h1>
+            <p className="text-[8px] font-black uppercase tracking-[0.4em] text-secondary">Operational Terminal</p>
           </div>
         </div>
       </div>

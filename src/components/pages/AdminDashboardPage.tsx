@@ -173,11 +173,11 @@ export default function AdminDashboardPage() {
          >
            <div className="glass-card p-12 space-y-10 border-white/5">
               <div className="text-center space-y-4">
-                 <div className="w-16 h-16 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto mb-6">
-                    <div className="w-4 h-4 bg-secondary shadow-neon-cyan animate-pulse" />
+                 <div className="w-24 h-24 rounded-3xl bg-black/40 border border-secondary/20 flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                    <img src="/vexor-logo.png" alt="Vexor Logo" className="w-16 h-16 object-contain" />
                  </div>
-                 <h1 className="font-heading text-4xl font-black text-foreground tracking-tighter uppercase">Root_Access</h1>
-                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/40">Secure Signal Verification Required</p>
+                 <h1 className="font-heading text-4xl font-black text-foreground tracking-tighter uppercase italic">Neural_Access</h1>
+                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary">Secure Command Uplink Required</p>
               </div>
 
               <div className="space-y-6">
