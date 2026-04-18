@@ -14,7 +14,8 @@ import {
   ChevronRight,
   TrendingUp,
   FileText,
-  QrCode
+  QrCode,
+  History
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -33,6 +34,7 @@ const menuItems = [
   { id: 'team', label: 'Squad Matrix', icon: Star },
   { id: 'enquiries', label: 'Incoming Signals', icon: Mail },
   { id: 'scanner', label: 'Neural QR Scanner', icon: QrCode },
+  { id: 'auditlogs', label: 'Neural Activity Logs', icon: History },
 ];
 
 export const Sidebar = ({ onSetActiveTab, activeTab }: SidebarProps) => {

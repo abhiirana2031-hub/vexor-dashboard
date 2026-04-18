@@ -22,6 +22,7 @@ import { UserForm } from '@/components/admin/Dialogs/UserForm';
 import { TestimonialManager } from '@/components/admin/TabViews/TestimonialManager';
 import { TestimonialForm } from '@/components/admin/Dialogs/TestimonialForm';
 import { ScannerView } from '@/components/admin/TabViews/ScannerView';
+import { ActivityLogManager } from '@/components/admin/TabViews/ActivityLogManager';
 import { BaseCrudService } from '@/integrations';
 
 // Original UI (Simplified for reuse or placeholders)
@@ -43,12 +44,14 @@ export default function AdminDashboardPage() {
     testimonials,
     blogs,
     users,
+    auditLogs,
     enquiries,
     siteStats,
     deleteItem,
     saveItem,
     refreshData,
-    member
+    member,
+    setActiveAdminUser
   } = useAdminData();
 
   const [activeTab, setActiveTab] = useState('stats');
@@ -110,15 +113,40 @@ export default function AdminDashboardPage() {
     setIsSaving(false);
   };
 
-  // Handle Admin Login (Mocked logic from original file)
-  const handleAdminLogin = () => {
-    const ADMIN_EMAIL = import.meta.env.PUBLIC_ADMIN_EMAIL || 'abhayrana8272@gmail.com';
-    const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD || 'vexor@#005';
-    
-    if (adminLoginForm.email === ADMIN_EMAIL && adminLoginForm.password === ADMIN_PASSWORD) {
+  // Handle Admin Login (RBAC Logic)
+  const handleAdminLogin = async () => {
+    setIsSaving(true);
+    setLoginError('');
+    try {
+      // Since we can't query by email directly, we fetch all users and find the match
+      // Note: In a production app, this should be handled by a dedicated auth endpoint
+      const res = await BaseCrudService.getAll<UserProfiles>('userprofiles');
+      const usersList = res.items;
+      
+      const matchedUser = usersList.find(u => 
+        u.email === adminLoginForm.email && 
+        u.passwordHash === adminLoginForm.password
+      );
+
+      if (!matchedUser) {
+        setLoginError('Neural handshake failed: Invalid credentials.');
+        setIsSaving(false);
+        return;
+      }
+
+      if (matchedUser.role !== 'admin') {
+        setLoginError('Access Denied: Insufficient clearance level.');
+        setIsSaving(false);
+        return;
+      }
+
+      // Success
+      setActiveAdminUser(matchedUser);
       setIsAdminLoggedIn(true);
-    } else {
-      setLoginError('Invalid transmission credentials.');
+    } catch (err) {
+      setLoginError('Matrix synchronization failure. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -310,8 +338,12 @@ export default function AdminDashboardPage() {
                     <ScannerView />
                   )}
 
+                  {activeTab === 'auditlogs' && (
+                    <ActivityLogManager logs={auditLogs} />
+                  )}
+
                   {/* Placeholder for other tabs */}
-                  {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials', 'scanner'].includes(activeTab) && (
+                  {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials', 'scanner', 'auditlogs'].includes(activeTab) && (
                     <div className="glass-card p-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-xs">
                        View Node: {activeTab.toUpperCase()} Offline
                     </div>
