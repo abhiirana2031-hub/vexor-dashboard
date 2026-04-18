@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
 import { BaseCrudService, useMember } from '@/integrations';
-import { Projects, Services, TeamMembers, Testimonials, Blogs, UserProfiles } from '@/entities';
+import { Projects, Services, TeamMembers, Testimonials, Blogs, UserProfiles, AuditLogs } from '@/entities';
+import emailjs from '@emailjs/browser';
 import emailjs from '@emailjs/browser';
 
 /**
@@ -10,6 +10,7 @@ import emailjs from '@emailjs/browser';
 export const useAdminData = () => {
   const { member, isAuthenticated } = useMember();
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [activeAdminUser, setActiveAdminUser] = useState<UserProfiles | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Data State
@@ -20,9 +21,10 @@ export const useAdminData = () => {
   const [blogs, setBlogs] = useState<Blogs[]>([]);
   const [users, setUsers] = useState<UserProfiles[]>([]);
   const [enquiries, setEnquiries] = useState<any[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLogs[]>([]);
   const [siteStats, setSiteStats] = useState<any>({});
 
-  const isAdmin = isAdminLoggedIn || (isAuthenticated && member?.profile?.nickname === 'admin');
+  const isAdmin = isAdminLoggedIn || (isAuthenticated && member?.profile?.nickname === 'admin') || (activeAdminUser?.role === 'admin');
 
   useEffect(() => {
     if (isAdmin) loadAllData();
@@ -39,7 +41,8 @@ export const useAdminData = () => {
         BaseCrudService.getAll<any>('enquiries').catch(() => ({ items: [] })),
         fetch('/api/sitestats').then(r => r.json()).catch(() => ({})),
         BaseCrudService.getAll<Blogs>('blogs').catch(() => ({ items: [] })),
-        BaseCrudService.getAll<UserProfiles>('userprofiles').catch(() => ({ items: [] }))
+        BaseCrudService.getAll<UserProfiles>('userprofiles').catch(() => ({ items: [] })),
+        BaseCrudService.getAll<AuditLogs>('auditlogs').catch(() => ({ items: [] }))
       ]);
 
       setProjects(pRes.items);
@@ -49,17 +52,38 @@ export const useAdminData = () => {
       setEnquiries(eRes.items || []);
       setBlogs(bRes.items || []);
       setUsers(uRes.items || []);
+      setAuditLogs((aRes as any).items || []);
       setSiteStats(statRes);
     } catch (error) {
       console.error('Error loading admin data:', error);
-    } finally {
       setIsLoading(false);
+    }
+  };
+
+  const createAuditLog = async (action: 'CREATE' | 'UPDATE' | 'DELETE', collectionId: string, itemId: string, description: string) => {
+    try {
+      const actorName = activeAdminUser?.fullName || 'Root Admin';
+      const actorId = activeAdminUser?._id || 'root-admin';
+      
+      const log: AuditLogs = {
+        actorId,
+        actorName,
+        action,
+        collectionId,
+        itemId,
+        description,
+        timestamp: new Date()
+      };
+      await BaseCrudService.create('auditlogs', log);
+    } catch (err) {
+      console.error('Audit log failed:', err);
     }
   };
 
   const deleteItem = async (id: string, collectionId: string) => {
     try {
       await BaseCrudService.delete(collectionId, id);
+      await createAuditLog('DELETE', collectionId, id, `Terminated record: ${id}`);
       // Optimistic update
       if (collectionId === 'projects') setProjects(p => p.filter(i => i._id !== id));
       if (collectionId === 'services') setServices(p => p.filter(i => i._id !== id));
@@ -79,15 +103,15 @@ export const useAdminData = () => {
   const saveItem = async (collectionId: string, data: any, id?: string) => {
     setIsLoading(true);
     try {
-      let response;
       if (id) {
-        // Ensure the ID is part of the data object for the service
-        response = await BaseCrudService.update(collectionId, { ...data, _id: id });
+        await BaseCrudService.update(collectionId, { ...data, _id: id });
+        await createAuditLog('UPDATE', collectionId, id, `Initialized protocol update on ${collectionId}`);
       } else {
-        response = await BaseCrudService.create(collectionId, data);
+        const res = await BaseCrudService.create<any>(collectionId, data);
+        await createAuditLog('CREATE', collectionId, res._id, `New entity manifested in ${collectionId}`);
       }
       await loadAllData();
-      return response;
+      return true;
     } catch (err) {
       console.error('Save failed:', err);
       return null;
@@ -106,11 +130,13 @@ export const useAdminData = () => {
     testimonials,
     blogs,
     users,
+    auditLogs,
     enquiries,
     siteStats,
     deleteItem,
     saveItem,
     refreshData,
-    member
+    member,
+    setActiveAdminUser
   };
 };

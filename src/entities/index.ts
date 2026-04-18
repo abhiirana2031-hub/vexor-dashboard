@@ -120,8 +120,10 @@ export interface UserProfiles {
   isVerified?: boolean;
   /** @wixFieldType text - Login method: email, phone, google */
   loginMethod?: string;
-  /** @wixFieldType text - Google OAuth ID */
-  googleId?: string;
+  /** @wixFieldType text - User role: admin, user */
+  role?: 'admin' | 'user';
+  /** @wixFieldType boolean */
+  isAdmin?: boolean;
 }
 
 
@@ -199,4 +201,27 @@ export interface Testimonials {
   clientImage?: string;
   /** @wixFieldType date */
   datePosted?: Date | string;
+}
+
+/**
+ * Collection ID: auditlogs
+ * Interface for Audit Logs
+ */
+export interface AuditLogs {
+  _id?: string;
+  _createdDate?: Date;
+  /** @wixFieldType text - User ID or Email of the performer */
+  actorId: string;
+  /** @wixFieldType text - Full Name of the performer */
+  actorName: string;
+  /** @wixFieldType text - Action: CREATE, UPDATE, DELETE */
+  action: 'CREATE' | 'UPDATE' | 'DELETE';
+  /** @wixFieldType text - Collection ID affected */
+  collectionId: string;
+  /** @wixFieldType text - ID of the item affected */
+  itemId: string;
+  /** @wixFieldType text - Short description of the change */
+  description: string;
+  /** @wixFieldType date */
+  timestamp: Date | string;
 }
