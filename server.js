@@ -183,7 +183,7 @@ app.patch('/api/cms/:collectionId/:itemId', async (req, res) => {
       return res.status(404).json({ error: 'Not found' })
     }
 
-    res.json(result)
+    res.json(result.value || result)
   } catch (error) {
     console.error('PATCH error:', error)
     res.status(500).json({ error: error.message })
@@ -214,7 +214,7 @@ app.delete('/api/cms/:collectionId/:itemId', async (req, res) => {
       return res.status(404).json({ error: 'Not found' })
     }
 
-    res.json(result)
+    res.json(result.value || result)
   } catch (error) {
     console.error('DELETE error:', error)
     res.status(500).json({ error: error.message })
