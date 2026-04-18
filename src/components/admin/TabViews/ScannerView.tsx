@@ -51,18 +51,23 @@ export const ScannerView = () => {
       setIsLoading(true);
       setError(null);
       
-      // Ensure previous instance is closed
+      // Ensure absolute release of previous hardware hooks
       await forceStopScanner();
       
+      // SMALL DELAY: Allow React to settle the DOM before attaching the heavy hardware link
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       const html5QrCode = new Html5Qrcode(SCANNER_ID);
       scannerRef.current = html5QrCode;
       
       const config = { 
-        fps: 15, 
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.0
+        fps: 20, 
+        qrbox: { width: 280, height: 280 },
+        aspectRatio: 1.0,
+        disableFlip: false
       };
       
+      // Attempt to secure camera stream
       await html5QrCode.start(
         { facingMode: "environment" },
         config,
@@ -70,15 +75,24 @@ export const ScannerView = () => {
           handleScanSuccess(decodedText);
         },
         () => {
-          // Normal scan flow
+          // Continuous scanning...
         }
-      );
+      ).catch(async (err) => {
+         // FALLBACK: Try any available camera if 'environment' (back camera) specific request fails
+         console.warn("Retrying with standard camera protocol...", err);
+         await html5QrCode.start(
+            { facingMode: "user" },
+            config,
+            (decodedText) => handleScanSuccess(decodedText),
+            () => {}
+         );
+      });
       
       setIsScannerActive(true);
       setIsLoading(false);
     } catch (err) {
-      console.error("Scanner init failed", err);
-      setError("NEURAL_LINK_FAILURE: Camera access denied or hardware offline.");
+      console.error("Neural hardware link failed:", err);
+      setError("NEURAL_LINK_FAILURE: Camera access was denied, or hardware is currently locked by another process.");
       setIsLoading(false);
       setIsScannerActive(false);
     }
