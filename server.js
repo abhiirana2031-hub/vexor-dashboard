@@ -101,7 +101,18 @@ app.get('/api/cms/:collectionId/:itemId', async (req, res) => {
     const { collectionId, itemId } = req.params
 
     const collection = getCollection(collectionId)
-    const item = await collection.findOne({ _id: new ObjectId(itemId) })
+    
+    // Try to handle ObjectId if it's a valid hex string, otherwise use string id
+    let queryId;
+    try {
+      queryId = itemId.length === 24 && /^[0-9a-fA-F]{24}$/.test(itemId) 
+        ? new ObjectId(itemId) 
+        : itemId;
+    } catch {
+      queryId = itemId;
+    }
+
+    const item = await collection.findOne({ _id: queryId })
 
     if (!item) {
       return res.status(404).json({ error: 'Not found' })
@@ -147,8 +158,18 @@ app.patch('/api/cms/:collectionId/:itemId', async (req, res) => {
     const collection = getCollection(collectionId)
     console.log(`[DB] Updating ${collectionId}:${itemId}`)
     
+    // Try to handle ObjectId if it's a valid hex string, otherwise use string id
+    let queryId;
+    try {
+      queryId = itemId.length === 24 && /^[0-9a-fA-F]{24}$/.test(itemId) 
+        ? new ObjectId(itemId) 
+        : itemId;
+    } catch {
+      queryId = itemId;
+    }
+
     const result = await collection.findOneAndUpdate(
-      { _id: new ObjectId(itemId) },
+      { _id: queryId },
       {
         $set: {
           ...updateData,
@@ -177,7 +198,17 @@ app.delete('/api/cms/:collectionId/:itemId', async (req, res) => {
     const collection = getCollection(collectionId)
     console.log(`[DB] Deleting ${collectionId}:${itemId}`)
 
-    const result = await collection.findOneAndDelete({ _id: new ObjectId(itemId) })
+    // Try to handle ObjectId if it's a valid hex string, otherwise use string id
+    let queryId;
+    try {
+      queryId = itemId.length === 24 && /^[0-9a-fA-F]{24}$/.test(itemId) 
+        ? new ObjectId(itemId) 
+        : itemId;
+    } catch {
+      queryId = itemId;
+    }
+
+    const result = await collection.findOneAndDelete({ _id: queryId })
 
     if (!result) {
       return res.status(404).json({ error: 'Not found' })

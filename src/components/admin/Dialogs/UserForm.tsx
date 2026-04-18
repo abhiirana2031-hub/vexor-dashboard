@@ -47,7 +47,11 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData, selectedProjectIds);
+    const submissionData = { ...formData };
+    if (!submissionData.passwordHash) {
+      delete submissionData.passwordHash;
+    }
+    onSave(submissionData, selectedProjectIds);
   };
 
   return (
