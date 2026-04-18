@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react';
 import { BaseCrudService, useMember } from '@/integrations';
 import { Projects, Services, TeamMembers, Testimonials, Blogs, UserProfiles, AuditLogs } from '@/entities';
-import emailjs from '@emailjs/browser';
 import emailjs from '@emailjs/browser';
 
 /**
@@ -33,7 +33,17 @@ export const useAdminData = () => {
   const loadAllData = async () => {
     setIsLoading(true);
     try {
-      const [pRes, sRes, tRes, testRes, eRes, statRes, bRes, uRes] = await Promise.all([
+      const [
+        pRes, 
+        sRes, 
+        tRes, 
+        testRes, 
+        eRes, 
+        statRes, 
+        bRes, 
+        uRes, 
+        aRes
+      ] = await Promise.all([
         BaseCrudService.getAll<Projects>('projects'),
         BaseCrudService.getAll<Services>('services'),
         BaseCrudService.getAll<TeamMembers>('teammembers'),
@@ -52,7 +62,7 @@ export const useAdminData = () => {
       setEnquiries(eRes.items || []);
       setBlogs(bRes.items || []);
       setUsers(uRes.items || []);
-      setAuditLogs((aRes as any).items || []);
+      setAuditLogs(aRes?.items || []);
       setSiteStats(statRes);
     } catch (error) {
       console.error('Error loading admin data:', error);
