@@ -21,6 +21,7 @@ import { UserManager } from '@/components/admin/TabViews/UserManager';
 import { UserForm } from '@/components/admin/Dialogs/UserForm';
 import { TestimonialManager } from '@/components/admin/TabViews/TestimonialManager';
 import { TestimonialForm } from '@/components/admin/Dialogs/TestimonialForm';
+import { ScannerView } from '@/components/admin/TabViews/ScannerView';
 import { BaseCrudService } from '@/integrations';
 
 // Original UI (Simplified for reuse or placeholders)
@@ -305,8 +306,12 @@ export default function AdminDashboardPage() {
                     />
                   )}
 
+                  {activeTab === 'scanner' && (
+                    <ScannerView />
+                  )}
+
                   {/* Placeholder for other tabs */}
-                  {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials'].includes(activeTab) && (
+                  {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials', 'scanner'].includes(activeTab) && (
                     <div className="glass-card p-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-xs">
                        View Node: {activeTab.toUpperCase()} Offline
                     </div>

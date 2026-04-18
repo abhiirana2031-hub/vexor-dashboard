@@ -13,7 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
-  FileText
+  FileText,
+  QrCode
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -31,6 +32,7 @@ const menuItems = [
   { id: 'testimonials', label: 'Client Feedback', icon: MessageSquare },
   { id: 'team', label: 'Squad Matrix', icon: Star },
   { id: 'enquiries', label: 'Incoming Signals', icon: Mail },
+  { id: 'scanner', label: 'Neural QR Scanner', icon: QrCode },
 ];
 
 export const Sidebar = ({ onSetActiveTab, activeTab }: SidebarProps) => {
