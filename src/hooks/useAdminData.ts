@@ -116,18 +116,22 @@ export const useAdminData = () => {
     try {
       if (id) {
         await BaseCrudService.update(collectionId, { ...data, _id: id });
-        await createAuditLog('UPDATE', collectionId, id, `Initialized protocol update on ${collectionId}`);
+        createAuditLog('UPDATE', collectionId, id, `Initialized protocol update on ${collectionId}`);
       } else {
         const res = await BaseCrudService.create<any>(collectionId, data);
-        await createAuditLog('CREATE', collectionId, res._id, `New entity manifested in ${collectionId}`);
+        createAuditLog('CREATE', collectionId, res._id, `New entity manifested in ${collectionId}`);
       }
-      await loadAllData();
+      
+      // Clear loading immediately so UI resolves
+      setIsLoading(false);
+      
+      // Perform background refresh without blocking the return
+      loadAllData();
       return true;
     } catch (err) {
       console.error('Save failed:', err);
-      return null;
-    } finally {
       setIsLoading(false);
+      return null;
     }
   };
 

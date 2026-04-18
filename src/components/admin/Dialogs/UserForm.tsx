@@ -16,8 +16,12 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
   const [formData, setFormData] = useState<Partial<UserType>>({
     fullName: user?.fullName || '',
     email: user?.email || '',
-    passwordHash: '', // Leave empty to represent "don't update password unless typed"
-    googleId: user?.googleId || '', // Just to see if it's OAuth
+    passwordHash: '',
+    googleId: user?.googleId || '',
+    nickname: user?.nickname || '',
+    bio: user?.bio || '',
+    profilePhoto: user?.profilePhoto || '',
+    role: user?.role || 'user',
   });
   
   const [availableProjects, setAvailableProjects] = useState<Projects[]>([]);
@@ -31,6 +35,10 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
       email: user?.email || '',
       passwordHash: '',
       googleId: user?.googleId || '',
+      nickname: user?.nickname || '',
+      bio: user?.bio || '',
+      profilePhoto: user?.profilePhoto || '',
+      role: user?.role || 'user',
     });
 
     // Fetch all projects to let the admin assign them to this user
