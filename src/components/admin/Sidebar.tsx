@@ -40,15 +40,15 @@ const menuItems = [
 export const Sidebar = ({ onSetActiveTab, activeTab }: SidebarProps) => {
   return (
     <div className="h-full bg-background border-r border-white/5 flex flex-col relative preserve-3d">
-      {/* Logo Section */}
-      <div className="p-8 pb-12">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/30 flex items-center justify-center overflow-hidden">
-            <img src="/vexor-logo.png" alt="Vexor Logo" className="w-7 h-7 object-contain" />
+      {/* Logo Section - 90% Prominence */}
+      <div className="px-4 py-10 flex justify-center">
+        <div className="w-[90%] glass-card p-6 border-secondary/20 bg-secondary/5 flex flex-col items-center gap-4 group hover:border-secondary/40 transition-all duration-700">
+          <div className="w-20 h-20 rounded-2xl bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden shadow-2xl group-hover:shadow-neon-cyan/20 transition-all">
+            <img src="/vexor-logo.png" alt="Vexor Logo" className="w-14 h-14 object-contain" />
           </div>
-          <div>
-            <h1 className="font-heading font-black text-xl tracking-tighter text-foreground">VEXOR</h1>
-            <p className="text-[8px] font-black uppercase tracking-[0.4em] text-secondary">Control_Panel v2.4</p>
+          <div className="text-center group-hover:scale-110 transition-transform duration-500">
+            <h1 className="font-heading font-black text-2xl tracking-[-0.1em] text-foreground uppercase italic px-2 bg-white/5 rounded-lg border border-white/5">VEXOR</h1>
+            <p className="text-[7px] font-bold uppercase tracking-[0.5em] text-secondary mt-2">Operational_Command_Interface</p>
           </div>
         </div>
       </div>
