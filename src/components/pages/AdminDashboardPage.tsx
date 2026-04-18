@@ -212,7 +212,7 @@ export default function AdminDashboardPage() {
 
         {/* CONTENT SCROLL AREA */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden p-8 lg:p-12 no-scrollbar">
-          <div className="max-w-7xl mx-auto space-y-12 pb-24">
+          <div className="w-full lg:w-[85%] mx-auto space-y-12 pb-24">
             
             {/* View Orchestrator */}
             <AnimatePresence mode="wait">

@@ -55,7 +55,7 @@ export const ProjectManager = ({ projects, onAddNew, onEdit, onDelete }: Project
                       src={image}
                       alt={title}
                       width={400}
-                      className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -72,7 +72,7 @@ export const ProjectManager = ({ projects, onAddNew, onEdit, onDelete }: Project
                   </div>
 
                   {/* Quick Actions Hover Overlay */}
-                  <div className="absolute inset-0 bg-background/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-4">
+                  <div className="absolute inset-0 bg-background/60 backdrop-blur-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-4">
                     <button 
                       onClick={() => onEdit(project)}
                       className="w-12 h-12 rounded-xl bg-secondary/20 border border-secondary/40 text-secondary flex items-center justify-center hover:bg-secondary hover:text-black transition-all"

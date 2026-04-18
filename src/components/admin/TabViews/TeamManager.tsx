@@ -52,14 +52,14 @@ export const TeamManager = ({ team, onAddNew, onEdit, onDelete }: TeamManagerPro
                     src={member.profilePhoto}
                     alt={member.fullName || 'Operative'}
                     width={400}
-                    className="w-full h-full object-cover rounded-3xl grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                    className="w-full h-full object-cover rounded-3xl transition-all duration-700"
                   />
                 ) : (
                   <User className="w-20 h-20 text-white/5" />
                 )}
 
                 {/* Edit/Delete Overlay */}
-                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4">
+                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center gap-4">
                   <div className="flex gap-4">
                      <button 
                        onClick={() => onEdit(member)}

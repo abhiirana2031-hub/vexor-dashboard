@@ -72,7 +72,7 @@ export const TestimonialManager = ({ testimonials, onAddNew, onEdit, onDelete }:
               </div>
 
               {/* Actions */}
-              <div className="absolute right-8 bottom-8 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute right-8 bottom-8 flex gap-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">
                  <button 
                    onClick={() => onEdit(item)}
                    className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center hover:bg-secondary text-secondary hover:text-black transition-colors"

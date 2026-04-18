@@ -38,7 +38,7 @@ export const UserManager = ({ users, onDelete, onEdit }: UserManagerProps) => {
                >
                  <div className="w-16 h-16 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:border-secondary/40 transition-colors overflow-hidden">
                     {user.profilePhoto ? (
-                       <img src={user.profilePhoto} alt="profile" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all opacity-80" />
+                       <img src={user.profilePhoto} alt="profile" className="w-full h-full object-cover transition-all" />
                     ) : (
                        <UserCircle className="w-8 h-8 text-foreground/40 group-hover:text-secondary" />
                     )}
@@ -53,7 +53,7 @@ export const UserManager = ({ users, onDelete, onEdit }: UserManagerProps) => {
                     </div>
                  </div>
 
-                 <div className="absolute right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2">
+                 <div className="absolute right-6 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2">
                     <button 
                       onClick={() => onEdit && onEdit(user)}
                       className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center hover:bg-secondary text-secondary hover:text-black transition-colors"

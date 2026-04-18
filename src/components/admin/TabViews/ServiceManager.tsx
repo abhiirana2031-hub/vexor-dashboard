@@ -48,7 +48,7 @@ export const ServiceManager = ({ services, onAddNew, onEdit, onDelete }: Service
                     src={service.serviceImage}
                     alt={service.serviceName || 'Service'}
                     width={300}
-                    className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
+                    className="w-full h-full object-cover transition-all duration-1000"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">

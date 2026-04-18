@@ -1,5 +1,6 @@
 import express from 'express'
 import { MongoClient, ObjectId } from 'mongodb'
+import multer from 'multer'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import path from 'path'
@@ -30,6 +31,28 @@ if (fs.existsSync(distPath)) {
   console.log('✓ Serving static files from:', distPath)
   app.use(express.static(distPath))
 }
+
+const uploadsPath = path.join(__dirname, 'public/uploads')
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true })
+}
+app.use('/uploads', express.static(uploadsPath))
+
+// Multer Configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsPath)
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+})
 
 // MongoDB Connection
 async function connectDB() {
@@ -64,6 +87,16 @@ function getCollection(collectionId) {
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', db: db ? 'connected' : 'disconnected' })
+})
+
+// Upload Endpoint
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' })
+  }
+  
+  const url = `/uploads/${req.file.filename}`
+  res.json({ url })
 })
 
 // GET all items with pagination
