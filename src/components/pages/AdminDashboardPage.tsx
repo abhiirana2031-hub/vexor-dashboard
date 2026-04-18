@@ -171,15 +171,13 @@ export default function AdminDashboardPage() {
            animate={{ opacity: 1, scale: 1 }}
            className="w-full max-w-md relative z-10"
          >
-           <div className="glass-card p-12 space-y-10 border-white/5 bg-secondary/[0.02]">
-              <div className="text-center space-y-6">
-                 <div className="w-32 h-32 rounded-3xl bg-black/60 border border-secondary/20 flex items-center justify-center mx-auto mb-8 shadow-neon-cyan/10">
-                    <img src="/vexor-logo.png" alt="Vexor Logo" className="w-20 h-20 object-contain drop-shadow-neon-cyan" />
+           <div className="glass-card p-12 space-y-10 border-white/5">
+              <div className="text-center space-y-4">
+                 <div className="w-16 h-16 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto mb-6">
+                    <div className="w-4 h-4 bg-secondary shadow-neon-cyan animate-pulse" />
                  </div>
-                 <div className="space-y-2">
-                    <h1 className="font-heading text-4xl font-black text-foreground tracking-[-0.05em] uppercase italic">Neural_Access</h1>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary">Secure Command Uplink Required</p>
-                 </div>
+                 <h1 className="font-heading text-4xl font-black text-foreground tracking-tighter uppercase">Root_Access</h1>
+                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/40">Secure Signal Verification Required</p>
               </div>
 
               <div className="space-y-6">
@@ -220,142 +218,24 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#03050a] flex items-center justify-center relative overflow-hidden font-paragraph py-8 px-4">
-      {/* Global Background Elements */}
-      <div className="fixed inset-0 cyber-grid opacity-10 pointer-events-none" />
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-secondary/5 blur-[150px] pointer-events-none" />
+    <div className="flex h-screen bg-[#03050a] text-foreground selection:bg-secondary/30 overflow-hidden font-paragraph">
+      {/* LEFT SIDEBAR - Desktop */}
+      <aside className="w-80 flex-shrink-0 hidden lg:block z-40 relative">
+        <Sidebar onSetActiveTab={setActiveTab} activeTab={activeTab} />
+      </aside>
 
-      {/* 70% FOCUSED DASHBOARD WINDOW CONTAINER */}
-      <div className="w-full max-w-[75vw] xl:max-w-[70vw] h-[92vh] bg-background border border-white/10 rounded-[32px] overflow-hidden flex relative z-10 shadow-2xl transition-all duration-700 hover:border-secondary/20 group">
-        
-        {/* Subtle Window Border Glow */}
-        <div className="absolute inset-0 rounded-[32px] pointer-events-none border border-secondary/5 group-hover:border-secondary/10 transition-colors" />
-
-        {/* LEFT SIDEBAR - Desktop (Preserved within the 70% window) */}
-        <aside className="w-80 flex-shrink-0 hidden lg:block z-40 relative border-r border-white/5">
-          <Sidebar onSetActiveTab={setActiveTab} activeTab={activeTab} />
-        </aside>
-
-        {/* MAIN CONTENT AREA */}
-        <main className="flex-1 flex flex-col min-w-0 relative h-full">
-          {/* TOPBAR */}
-          <Topbar member={member} onToggleSidebar={() => setIsMobileMenuOpen(true)} />
-
-          <div className="flex-1 overflow-y-auto no-scrollbar p-6 lg:p-10 relative custom-scrollbar">
-            <div className="relative z-10 mx-auto w-full max-w-7xl">
-              <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <motion.div 
-                    key="loading"
-                    initial={{ opacity: 0 }} 
-                    animate={{ opacity: 1 }} 
-                    exit={{ opacity: 0 }}
-                    className="h-96 flex flex-col items-center justify-center gap-6"
-                  >
-                     <LoadingSpinner />
-                     <p className="text-[10px] font-black uppercase tracking-[0.5em] text-foreground/20">Syncing Matrix Streams...</p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {activeTab === 'stats' && <StatsOverview siteStats={siteStats} />}
-                    
-                    {activeTab === 'projects' && (
-                      <ProjectManager 
-                        projects={projects} 
-                        onAddNew={() => handleAddNew()}
-                        onEdit={handleEdit}
-                        onDelete={(id) => deleteItem(id, 'projects')}
-                      />
-                    )}
-
-                    {activeTab === 'services' && (
-                      <ServiceManager 
-                        services={services}
-                        onAddNew={() => handleAddNew()}
-                        onEdit={handleEdit}
-                        onDelete={(id) => deleteItem(id, 'services')}
-                      />
-                    )}
-
-                    {activeTab === 'blogs' && (
-                      <BlogManager 
-                        blogs={blogs}
-                        onAddNew={() => handleAddNew()}
-                        onEdit={handleEdit}
-                        onDelete={(id) => deleteItem(id, 'blogs')}
-                      />
-                    )}
-
-                    {activeTab === 'users' && (
-                      <UserManager 
-                        users={users}
-                        onAddNew={() => handleAddNew()}
-                        onEdit={handleEdit}
-                        onDelete={(id) => deleteItem(id, 'userprofiles')}
-                      />
-                    )}
-
-                    {activeTab === 'team' && (
-                      <TeamManager 
-                        team={teamMembers}
-                        onAddNew={() => handleAddNew()}
-                        onEdit={handleEdit}
-                        onDelete={(id) => deleteItem(id, 'teammembers')}
-                      />
-                    )}
-
-                    {activeTab === 'testimonials' && (
-                      <TestimonialManager 
-                        testimonials={testimonials}
-                        onAddNew={() => handleAddNew()}
-                        onEdit={handleEdit}
-                        onDelete={(id) => deleteItem(id, 'testimonials')}
-                      />
-                    )}
-
-                    {activeTab === 'enquiries' && (
-                      <EnquiryManager enquiries={enquiries} />
-                    )}
-
-                    {activeTab === 'scanner' && (
-                      <ScannerView />
-                    )}
-
-                    {activeTab === 'auditlogs' && (
-                      <ActivityLogManager logs={auditLogs} />
-                    )}
-
-                    {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials', 'scanner', 'auditlogs'].includes(activeTab) && (
-                      <div className="glass-card p-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-xs">
-                         View Node: {activeTab.toUpperCase()} Offline
-                      </div>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </main>
-      </div>
-
-      {/* MOBILE DRAWER */}
+      {/* LEFT SIDEBAR - Mobile (Drawer) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
             <motion.div 
                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                onClick={() => setIsMobileMenuOpen(false)}
-               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] lg:hidden" 
+               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" 
             />
             <motion.aside 
                initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
-               className="fixed inset-y-0 left-0 w-80 z-[101] lg:hidden border-r border-white/5 bg-[#03050a]"
+               className="fixed inset-y-0 left-0 w-80 z-50 lg:hidden border-r border-white/5 bg-[#03050a]"
             >
                <Sidebar onSetActiveTab={(tab) => { setActiveTab(tab); setIsMobileMenuOpen(false); }} activeTab={activeTab} />
             </motion.aside>
@@ -363,37 +243,168 @@ export default function AdminDashboardPage() {
         )}
       </AnimatePresence>
 
-      {/* CRUD DIALOGS */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl glass-card bg-[#03050a]/90 backdrop-blur-2xl border-white/5 max-h-[90vh] overflow-y-auto no-scrollbar">
+      {/* MAIN CONTENT AREA */}
+      <main className="flex-1 flex flex-col min-w-0 relative h-full w-full">
+        {/* TOPBAR */}
+        <Topbar member={member} onToggleSidebar={() => setIsMobileMenuOpen(true)} />
+
+        {/* CONTENT SCROLL AREA */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-8 lg:p-12 no-scrollbar">
+          <div className="w-full lg:w-[85%] mx-auto space-y-12 pb-24">
+            
+            {/* View Orchestrator */}
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <motion.div 
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="h-96 flex items-center justify-center"
+                >
+                   <div className="flex flex-col items-center gap-6">
+                      <LoadingSpinner />
+                      <p className="text-[10px] font-black uppercase tracking-[0.5em] text-foreground/20">Syncing Matrix Streams...</p>
+                   </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {activeTab === 'stats' && <StatsOverview stats={{ 
+                    projects: projects.length, 
+                    users: users.length, 
+                    enquiries: enquiries.length,
+                    blogs: blogs.length
+                  }} />}
+
+                  {activeTab === 'projects' && (
+                    <ProjectManager 
+                      projects={projects} 
+                      onAddNew={handleAddNew}
+                      onEdit={handleEdit}
+                      onDelete={(id) => deleteItem(id, 'projects')}
+                    />
+                  )}
+
+                  {activeTab === 'services' && (
+                    <ServiceManager 
+                      services={services} 
+                      onAddNew={handleAddNew}
+                      onEdit={handleEdit}
+                      onDelete={(id) => deleteItem(id, 'services')}
+                    />
+                  )}
+
+                  {activeTab === 'blogs' && (
+                    <BlogManager 
+                      blogs={blogs} 
+                      onAddNew={handleAddNew}
+                      onEdit={handleEdit}
+                      onDelete={(id) => deleteItem(id, 'blogs')}
+                    />
+                  )}
+
+                  {activeTab === 'enquiries' && (
+                    <EnquiryManager 
+                      enquiries={enquiries} 
+                      onDelete={(id) => deleteItem(id, 'enquiries')}
+                      onUpdateEnquiry={(id, updates) => {
+                         const enquiry = enquiries.find(e => e._id === id);
+                         if (enquiry) saveItem('enquiries', { ...enquiry, ...updates }, id);
+                      }}
+                    />
+                  )}
+
+                  {activeTab === 'team' && (
+                    <TeamManager 
+                      team={teamMembers} 
+                      onAddNew={handleAddNew}
+                      onEdit={handleEdit}
+                      onDelete={(id) => deleteItem(id, 'teammembers')}
+                    />
+                  )}
+
+                  {activeTab === 'users' && (
+                    <UserManager 
+                      users={users} 
+                      onEdit={handleEdit}
+                      onDelete={(id) => deleteItem(id, 'userprofiles')}
+                    />
+                  )}
+
+                  {activeTab === 'testimonials' && (
+                    <TestimonialManager 
+                      testimonials={testimonials} 
+                      onAddNew={handleAddNew}
+                      onEdit={handleEdit}
+                      onDelete={(id) => deleteItem(id, 'testimonials')}
+                    />
+                  )}
+
+                  {activeTab === 'scanner' && (
+                    <ScannerView />
+                  )}
+
+                  {activeTab === 'auditlogs' && (
+                    <ActivityLogManager logs={auditLogs} />
+                  )}
+
+                  {/* Placeholder for other tabs */}
+                  {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials', 'scanner', 'auditlogs'].includes(activeTab) && (
+                    <div className="glass-card p-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-xs">
+                       View Node: {activeTab.toUpperCase()} Offline
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Global Floating Background Effects */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-secondary/5 blur-[150px] -z-10 rounded-full" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-neon-purple/5 blur-[150px] -z-10 rounded-full" />
+      </main>
+
+      {/* CRUD DIALOG PLACEHOLDER */}
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open) setSelectedItem(null);
+      }}>
+        <DialogContent className="glass-card border-white/5 bg-[#05070d]/90 w-[95vw] md:w-full md:max-w-2xl max-h-[90vh] overflow-y-auto no-scrollbar mx-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black text-foreground tracking-tighter uppercase mb-4 italic">
-              {selectedItem ? `Update_Node: ${activeTab.toUpperCase()}` : `Initialize_New_Node: ${activeTab.toUpperCase()}`}
+            <DialogTitle className="text-2xl font-black tracking-tighter uppercase">
+              {selectedItem ? 'Update Node' : 'Initialize Node'}
             </DialogTitle>
           </DialogHeader>
           
           {activeTab === 'projects' && (
-             <ProjectForm project={selectedItem} onSave={(data) => handleSave(data)} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <ProjectForm key={selectedItem?._id || 'new'} project={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
-
           {activeTab === 'services' && (
-             <ServiceForm service={selectedItem} onSave={(data) => handleSave(data)} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <ServiceForm key={selectedItem?._id || 'new'} service={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
-
           {activeTab === 'blogs' && (
-             <BlogForm blog={selectedItem} onSave={(data) => handleSave(data)} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <BlogForm key={selectedItem?._id || 'new'} blog={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
-
-          {activeTab === 'users' && (
-             <UserForm user={selectedItem} onSave={(data, pids) => handleSave(data, pids)} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
-          )}
-
           {activeTab === 'team' && (
-             <TeamForm member={selectedItem} onSave={(data) => handleSave(data)} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <TeamForm key={selectedItem?._id || 'new'} member={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
           )}
-
+          {activeTab === 'users' && (
+             <UserForm key={selectedItem?._id || 'new'} user={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+          )}
           {activeTab === 'testimonials' && (
-             <TestimonialForm testimonial={selectedItem} onSave={(data) => handleSave(data)} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+             <TestimonialForm key={selectedItem?._id || 'new'} testimonial={selectedItem} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} isSaving={isSaving} />
+          )}
+          {!['projects', 'services', 'blogs', 'team', 'users', 'testimonials'].includes(activeTab) && (
+            <div className="py-12 text-center space-y-6">
+               <LoadingSpinner />
+               <p className="text-[10px] font-black uppercase text-foreground/40 tracking-widest">
+                  CRUD Interface Modularization for {activeTab.toUpperCase()} in Progress...
+               </p>
+            </div>
           )}
         </DialogContent>
       </Dialog>
