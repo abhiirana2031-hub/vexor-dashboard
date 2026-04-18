@@ -123,10 +123,19 @@ export default function AdminDashboardPage() {
       const res = await BaseCrudService.getAll<UserProfiles>('userprofiles');
       const usersList = res.items;
       
-      const matchedUser = usersList.find(u => 
+      let matchedUser = usersList.find(u => 
         u.email === adminLoginForm.email && 
         u.passwordHash === adminLoginForm.password
       );
+
+      // FALLBACK: If no database user found, check hardcoded credentials for initial setup
+      const FALLBACK_ADMIN_EMAIL = 'abhayrana8272@gmail.com';
+      const FALLBACK_ADMIN_PASS = 'vexor@#005';
+
+      if (!matchedUser && adminLoginForm.email === FALLBACK_ADMIN_EMAIL && adminLoginForm.password === FALLBACK_ADMIN_PASS) {
+        setIsAdminLoggedIn(true);
+        return;
+      }
 
       if (!matchedUser) {
         setLoginError('Neural handshake failed: Invalid credentials.');
