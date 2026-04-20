@@ -92,7 +92,7 @@ export const ImageUpload = ({ value, onChange, label = "Upload Image" }: ImageUp
       )}
 
       {/* Visual Feedback */}
-      {value && !error && value.startsWith('/uploads/') && (
+      {value && !error && (value.startsWith('/uploads/') || value.includes('/uploads/')) && (
          <p className="text-[10px] text-neon-green font-bold tracking-wider flex items-center gap-2 mt-2">
             <CheckCircle2 className="w-3 h-3" /> Secure local link established successfully.
          </p>

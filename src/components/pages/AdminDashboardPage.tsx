@@ -96,7 +96,8 @@ export default function AdminDashboardPage() {
 
     const savedItem = await saveItem(collectionId, data, idToUpdate);
     const success = !!savedItem;
-    const finalId = idToUpdate || savedItem?._id;
+    // Handle the fact that saveItem might return the item directly or a result object
+    const finalId = idToUpdate || (savedItem as any)?._id;
     
     // Cross-Collection logic for Neural Profiles mapping to Projects
     if (success && activeTab === 'users' && assignedProjectIds && finalId) {

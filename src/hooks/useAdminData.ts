@@ -114,20 +114,23 @@ export const useAdminData = () => {
   const saveItem = async (collectionId: string, data: any, id?: string) => {
     setIsLoading(true);
     try {
-      if (id) {
-        await BaseCrudService.update(collectionId, { ...data, _id: id });
-        createAuditLog('UPDATE', collectionId, id, `Initialized protocol update on ${collectionId}`);
-      } else {
-        const res = await BaseCrudService.create<any>(collectionId, data);
-        createAuditLog('CREATE', collectionId, res._id, `New entity manifested in ${collectionId}`);
-      }
+      const savedResult = id 
+        ? await BaseCrudService.update(collectionId, { ...data, _id: id })
+        : await BaseCrudService.create<any>(collectionId, data);
+      
+      createAuditLog(
+        id ? 'UPDATE' : 'CREATE', 
+        collectionId, 
+        id || (savedResult as any)?._id, 
+        `${id ? 'Updated' : 'Created'} entity in ${collectionId}`
+      );
       
       // Clear loading immediately so UI resolves
       setIsLoading(false);
       
       // Perform background refresh without blocking the return
       loadAllData();
-      return true;
+      return savedResult;
     } catch (err) {
       console.error('Save failed:', err);
       setIsLoading(false);

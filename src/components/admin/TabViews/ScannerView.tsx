@@ -100,15 +100,28 @@ export const ScannerView = () => {
 
   const handleScanSuccess = async (decodedText: string) => {
     try {
-      const data = JSON.parse(decodedText);
-      if (data.type === 'user_id' && data.id) {
-        setScanResult(data.id);
+      // Try parsing as JSON first
+      let userId = '';
+      try {
+        const data = JSON.parse(decodedText);
+        if (data.type === 'user_id' && data.id) {
+           userId = data.id;
+        } else if (data.id) {
+           userId = data.id;
+        }
+      } catch (e) {
+        // Fallback: Treat decodedText as the ID directly if it's not JSON
+        userId = decodedText.trim();
+      }
+
+      if (userId) {
+        setScanResult(userId);
         setIsScannerActive(false);
         await forceStopScanner();
-        fetchUserDetails(data.id);
+        fetchUserDetails(userId);
       }
     } catch (e) {
-      // Not our format
+      console.error("Scan processing failed:", e);
     }
   };
 
@@ -204,7 +217,7 @@ export const ScannerView = () => {
               <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-secondary rounded-bl-xl" />
               <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-secondary rounded-br-xl" />
               
-              <div id={SCANNER_ID} className="w-full h-full rounded-lg overflow-hidden grayscale brightness-125 contrast-125" />
+              <div id={SCANNER_ID} className="w-full h-full rounded-lg overflow-hidden relative z-0" />
               
               {/* Scanning Ray Filter */}
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-secondary/5 to-transparent opacity-20" />

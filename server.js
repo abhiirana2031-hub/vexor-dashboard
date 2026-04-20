@@ -96,10 +96,8 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     return res.status(400).json({ error: 'No file uploaded' })
   }
   
-  // Construct absolute URL so other sites (like your live site) can access the images
-  const protocol = req.protocol
-  const host = req.get('host')
-  const url = `${protocol}://${host}/uploads/${req.file.filename}`
+  // Return relative URL for maximum portability across local/dev/prod environments
+  const url = `/uploads/${req.file.filename}`
   
   res.json({ url })
 })
