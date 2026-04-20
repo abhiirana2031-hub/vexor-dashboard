@@ -241,13 +241,13 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="h-screen w-screen bg-[#03050a] flex items-center justify-center relative overflow-hidden font-paragraph">
+    <div className="h-screen w-screen bg-[#03050a] relative overflow-hidden font-paragraph">
       {/* Global Background Elements */}
       <div className="fixed inset-0 cyber-grid opacity-10 pointer-events-none" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-secondary/5 blur-[150px] pointer-events-none" />
 
       {/* FULL SCREEN DASHBOARD CONTAINER */}
-      <div className="w-full h-full bg-background flex relative z-10 overflow-hidden">
+      <div className="fixed inset-0 bg-background flex z-10 overflow-hidden">
         
         {/* LEFT SIDEBAR - Desktop */}
         <aside className="w-80 flex-shrink-0 hidden lg:block z-40 relative border-r border-white/5">
@@ -260,7 +260,7 @@ export default function AdminDashboardPage() {
           <Topbar member={member} onToggleSidebar={() => setIsMobileMenuOpen(true)} />
 
           <div className="flex-1 overflow-y-auto no-scrollbar p-6 lg:p-8 relative custom-scrollbar">
-            <div className="relative z-10 mx-auto w-full max-w-[85%] animate-in fade-in zoom-in-95 duration-500">
+            <div className="relative z-10 mx-auto w-full lg:max-w-[80vw] animate-in fade-in zoom-in-95 duration-500">
               <AnimatePresence mode="wait">
                 {isLoading ? (
                   <motion.div 

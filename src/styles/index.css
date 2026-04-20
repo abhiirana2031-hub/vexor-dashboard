@@ -1,4 +1,188 @@
-@import './global.css';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Font Families */
+  --font-heading: "Satoshi", "Inter", "syne", "sans-serif";
+  --font-paragraph: "Inter", "space grotesk", "sans-serif";
+  --font-azeret-mono-black: "azeret-mono-black", "azeret mono", "monospace";
+
+  /* Custom Colors */
+  --color-destructive: #EF4444;
+  --color-destructive-foreground: #FFFFFF;
+  --color-accent-teal: #39FF14;
+  --color-neon-pink: #FF006E;
+  --color-neon-purple: #A100F2;
+  --color-neon-cyan: #00D9FF;
+  --color-neon-blue: #0099FF;
+  --color-electric-pink: #FF3399;
+  --color-soft-shadow-gray: #1E2A3A;
+  --color-background: #0a0a0f;
+  --color-secondary: #00D9FF;
+  --color-foreground: #F0F0F0;
+  --color-secondary-foreground: #0A192F;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary: #0A192F;
+
+  /* Custom Box Shadows */
+  --shadow-neon-cyan: 0 0 15px rgba(0, 217, 255, 0.4);
+  --shadow-neon-purple: 0 0 15px rgba(123, 97, 255, 0.4);
+  --shadow-glow-sm: 0 0 5px rgba(255, 255, 255, 0.2);
+  --shadow-glow-md: 0 0 15px rgba(255, 255, 255, 0.1);
+  --shadow-glow-lg: 0 0 30px rgba(0, 217, 255, 0.15);
+  --shadow-soft-depth: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 217, 255, 0.05);
+  --shadow-glass-inner: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Background Images */
+  --image-gradient-neon: linear-gradient(135deg, #00D9FF 0%, #0099FF 50%, #A100F2 100%);
+  --image-gradient-neon-pink: linear-gradient(135deg, #FF006E 0%, #FF3399 50%, #A100F2 100%);
+  --image-gradient-glow: radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.15), transparent);
+  --image-glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+
+  /* Custom Animations and Keyframes */
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-slide-up: slide-up 0.8s ease-out forwards;
+  --animate-background-pan: background-pan 12s linear infinite;
+  --animate-mesh-panning: mesh-panning 20s ease-in-out infinite;
+  --animate-text-shimmer: text-shimmer 3s ease-in-out infinite;
+  --animate-scanner: scanner 4s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-lens-flare: lens-flare 5s ease-in-out infinite;
+  --animate-neon-border: neon-border 2s ease-in-out infinite;
+  --animate-shimmer: shimmer 8s infinite;
+
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px rgba(0, 217, 255, 0.3)); }
+    50% { opacity: 0.8; filter: drop-shadow(0 0 15px rgba(0, 217, 255, 0.6)); }
+  }
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-up {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes background-pan {
+    0% { background-position: 0% center; }
+    100% { background-position: -200% center; }
+  }
+  @keyframes mesh-panning {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+  }
+  @keyframes text-shimmer {
+    0%, 100% { background-position: -100% 0; }
+    50% { background-position: 100% 0; }
+  }
+  @keyframes scanner {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(400%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  @keyframes lens-flare {
+    0% { left: -100%; top: 0%; }
+    100% { left: 200%; top: 100%; }
+  }
+  @keyframes neon-border {
+    0%, 100% { border-color: rgba(0, 217, 255, 0.5); }
+    50% { border-color: rgba(0, 217, 255, 0.2); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+}
+
+/* Global Styles */
+body {
+  @apply bg-[#03050a] text-foreground antialiased selection:bg-secondary/30 selection:text-secondary-foreground;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 80%;
+  overflow-x: hidden;
+}
+
+/* Custom Utilities and Components - Unrolled @apply to avoid dependency issues in v4 */
+.glass-effect {
+  @apply backdrop-blur-[16px] bg-white/[0.02] border border-white/[0.05] rounded-3xl shadow-soft-depth relative;
+}
+
+.glass-effect::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-50 pointer-events-none;
+}
+
+.glass-card {
+  @apply backdrop-blur-[16px] bg-white/[0.02] border border-white/[0.05] rounded-3xl shadow-soft-depth relative p-8 sm:p-10 transition-all duration-500 overflow-hidden;
+}
+
+.glass-card-hover {
+  @apply backdrop-blur-[16px] bg-white/[0.02] border border-white/[0.05] rounded-3xl shadow-soft-depth relative p-8 sm:p-10 transition-all duration-500 overflow-hidden hover:bg-white/[0.04] hover:border-secondary/20 hover:shadow-neon-cyan/10 cursor-pointer;
+}
+
+.ambient-glow {
+  @apply absolute -z-10 blur-[120px] opacity-30 animate-mesh-panning;
+}
+
+.neon-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-secondary via-white to-secondary animate-text-shimmer bg-[length:200%_auto] font-black;
+}
+
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, black, transparent 90%);
+}
+
+.scanner-surface {
+  @apply relative overflow-hidden;
+}
+
+.scanner-surface::after {
+  content: '';
+  @apply absolute inset-x-0 h-[100px] bg-gradient-to-b from-transparent via-secondary/10 to-transparent -top-[100px] animate-scanner pointer-events-none;
+}
+
+.glass-noise {
+  position: relative;
+}
+
+.glass-noise::after {
+  content: "";
+  @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.futuristic-button {
+  @apply relative px-10 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-xs transition-all duration-500 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-secondary/40 shadow-soft-depth overflow-hidden;
+}
+
+.futuristic-button .btn-glow {
+  @apply absolute -inset-full bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-45 translate-x-[-100%] transition-transform duration-1000;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#03050a];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-secondary/40 transition-colors;
+}
+
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d { transform-style: preserve-3d; }
