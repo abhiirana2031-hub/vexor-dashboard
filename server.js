@@ -33,11 +33,27 @@ if (fs.existsSync(distPath)) {
   app.use(express.static(distPath))
 }
 
-const uploadsPath = path.join(__dirname, 'public/uploads')
+const uploadsPath = process.env.VERCEL 
+  ? '/tmp' 
+  : path.join(__dirname, 'public/uploads')
+
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true })
 }
 app.use('/uploads', express.static(uploadsPath))
+
+// Database Middleware for Serverless Environment
+async function dbMiddleware(req, res, next) {
+  try {
+    await connectDB()
+    next()
+  } catch (error) {
+    res.status(500).json({ error: 'Database connection failed: ' + error.message })
+  }
+}
+
+// Apply middleware to all API routes
+app.use('/api', dbMiddleware)
 
 // Multer Configuration
 const storage = multer.diskStorage({
@@ -86,8 +102,13 @@ function getCollection(collectionId) {
 }
 
 // Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', db: db ? 'connected' : 'disconnected' })
+app.get('/health', async (req, res) => {
+  try {
+    await connectDB()
+    res.json({ status: 'ok', db: db ? 'connected' : 'disconnected' })
+  } catch (e) {
+    res.status(500).json({ status: 'error', error: e.message })
+  }
 })
 
 // Upload Endpoint
