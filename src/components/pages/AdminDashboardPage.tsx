@@ -32,7 +32,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Trash2, UserCircle, Activity, ShieldCheck } from 'lucide-react';
+import { Trash2, UserCircle, Activity, ShieldCheck, Zap } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const {
@@ -176,7 +176,6 @@ export default function AdminDashboardPage() {
       setIsAdminLoggedIn(true);
     } catch (err: any) {
       console.error('Login sync error:', err);
-      // Display the actual error message for better diagnostics
       setLoginError(`Matrix synchronization failure: ${err.message || 'Unknown protocol error'}`);
     } finally {
       setIsSaving(false);
@@ -186,7 +185,6 @@ export default function AdminDashboardPage() {
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-[#03050a] flex items-center justify-center p-4 overflow-hidden relative">
-         {/* Cyber Ambience */}
          <div className="absolute inset-0 cyber-grid opacity-10" />
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-secondary/10 blur-[150px] " />
          
@@ -196,9 +194,8 @@ export default function AdminDashboardPage() {
            className="w-full max-w-md relative z-10"
          >
             <div className="glass-card p-12 space-y-10 border-white/5 relative overflow-hidden">
-               {/* Build Tracking Tag */}
                <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
-                 <span className="text-[7px] font-mono tracking-widest uppercase">Build_ID: 2024-04-20_2155_RESILIENT</span>
+                 <span className="text-[7px] font-mono tracking-widest uppercase">Build_ID: 2024-04-20_2225_STABLE</span>
                </div>
 
                <div className="text-center space-y-4">
@@ -240,7 +237,6 @@ export default function AdminDashboardPage() {
                      <div className="btn-glow" />
                   </button>
 
-                  {/* System Override Debug Section */}
                   <div className="mt-8 pt-8 border-t border-white/5">
                     <details className="cursor-pointer group">
                       <summary className="text-[9px] uppercase font-bold tracking-[0.2em] text-foreground/20 group-hover:text-secondary/40 transition-colors list-none text-center">
@@ -260,11 +256,8 @@ export default function AdminDashboardPage() {
                           </span>
                         </div>
                         <div className="pt-2 text-foreground/20 italic border-t border-white/5 uppercase text-[8px] tracking-widest text-center">
-                          Build_Stamp: 2024-04-20_2155_RESILIENT
+                          Build_Stamp: 2024-04-20_2225_STABLE
                         </div>
-                        <p className="text-[8px] text-foreground/10 text-center leading-tight">
-                          The Diagnostics Terminal rules out input mismatches or caching during Vercel sync troubleshooting.
-                        </p>
                       </div>
                     </details>
                   </div>
@@ -277,21 +270,15 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="h-screen w-screen bg-[#03050a] relative overflow-hidden font-paragraph">
-      {/* Global Background Elements */}
       <div className="fixed inset-0 cyber-grid opacity-10 pointer-events-none" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-secondary/5 blur-[150px] pointer-events-none" />
 
-      {/* FULL SCREEN DASHBOARD CONTAINER */}
       <div className="fixed inset-0 bg-background flex z-10 overflow-hidden">
-        
-        {/* LEFT SIDEBAR - Desktop */}
         <aside className="w-80 flex-shrink-0 hidden lg:block z-40 relative border-r border-white/5">
           <Sidebar onSetActiveTab={setActiveTab} activeTab={activeTab} />
         </aside>
 
-        {/* MAIN CONTENT AREA */}
         <main className="flex-1 flex flex-col min-w-0 relative h-full overflow-hidden">
-          {/* TOPBAR */}
           <Topbar member={member} onToggleSidebar={() => setIsMobileMenuOpen(true)} />
 
           <div className="flex-1 overflow-y-auto no-scrollbar p-6 lg:p-8 relative custom-scrollbar">
@@ -316,7 +303,8 @@ export default function AdminDashboardPage() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {activeTab === 'stats' && <StatsOverview siteStats={siteStats} />}
+                    {/* CRITICAL FIX: Changed siteStats={siteStats} to stats={siteStats} to match StatsOverview component signature */}
+                    {activeTab === 'stats' && <StatsOverview stats={siteStats} />}
                     
                     {activeTab === 'projects' && (
                       <ProjectManager 
@@ -383,12 +371,6 @@ export default function AdminDashboardPage() {
                     {activeTab === 'auditlogs' && (
                       <ActivityLogManager logs={auditLogs} />
                     )}
-
-                    {!['stats', 'projects', 'services', 'blogs', 'enquiries', 'team', 'users', 'testimonials', 'scanner', 'auditlogs'].includes(activeTab) && (
-                      <div className="glass-card p-20 text-center opacity-20 font-black uppercase tracking-[0.5em] text-xs">
-                         View Node: {activeTab.toUpperCase()} Offline
-                      </div>
-                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -397,7 +379,6 @@ export default function AdminDashboardPage() {
         </main>
       </div>
 
-      {/* MOBILE DRAWER */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -416,14 +397,6 @@ export default function AdminDashboardPage() {
         )}
       </AnimatePresence>
 
-      {/* Persistence Footer Diagnostics */}
-      <div className="fixed bottom-4 left-0 right-0 z-50 pointer-events-none opacity-20">
-        <p className="text-[8px] uppercase tracking-[0.5em] font-bold text-center text-foreground">
-          Core Version 8.0.3-RESILIENT // Build Timestamp: 2024-04-20_2155
-        </p>
-      </div>
-
-      {/* NEURAL COMMAND POPUP (CUSTOM UI) */}
       <CommandPopup 
         isOpen={confirmDialog.isOpen}
         title={confirmDialog.title}
@@ -432,7 +405,6 @@ export default function AdminDashboardPage() {
         onClose={() => setConfirmDialog(p => ({ ...p, isOpen: false }))}
       />
 
-      {/* CRUD DIALOGS */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl glass-card bg-[#03050a]/90 backdrop-blur-2xl border-white/5 max-h-[90vh] overflow-y-auto no-scrollbar">
           <DialogHeader>
