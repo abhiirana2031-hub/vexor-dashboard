@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminData } from '@/hooks/useAdminData';
 
@@ -32,7 +32,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Trash2 } from 'lucide-react';
+import { Trash2, UserCircle, Activity, ShieldCheck } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const {
@@ -96,10 +96,8 @@ export default function AdminDashboardPage() {
 
     const savedItem = await saveItem(collectionId, data, idToUpdate);
     const success = !!savedItem;
-    // Handle the fact that saveItem might return the item directly or a result object
     const finalId = idToUpdate || (savedItem as any)?._id;
     
-    // Cross-Collection logic for Neural Profiles mapping to Projects
     if (success && activeTab === 'users' && assignedProjectIds && finalId) {
        try {
            const allProjs = await BaseCrudService.getAll<any>('projects');
@@ -145,7 +143,7 @@ export default function AdminDashboardPage() {
     const FALLBACK_ADMIN_EMAIL = 'abhayrana8272@gmail.com';
     const FALLBACK_ADMIN_PASS = 'vexor@#005';
 
-    if (adminLoginForm.email === FALLBACK_ADMIN_EMAIL && adminLoginForm.password === FALLBACK_ADMIN_PASS) {
+    if (adminLoginForm.email.trim() === FALLBACK_ADMIN_EMAIL && adminLoginForm.password.trim() === FALLBACK_ADMIN_PASS) {
       setIsAdminLoggedIn(true);
       setIsSaving(false);
       return;
@@ -157,8 +155,8 @@ export default function AdminDashboardPage() {
       const usersList = res.items;
       
       let matchedUser = usersList.find(u => 
-        u.email === adminLoginForm.email && 
-        u.passwordHash === adminLoginForm.password
+        u.email === adminLoginForm.email.trim() && 
+        u.passwordHash === adminLoginForm.password.trim()
       );
 
       if (!matchedUser) {
@@ -197,47 +195,81 @@ export default function AdminDashboardPage() {
            animate={{ opacity: 1, scale: 1 }}
            className="w-full max-w-md relative z-10"
          >
-           <div className="glass-card p-12 space-y-10 border-white/5">
-              <div className="text-center space-y-4">
-                 <div className="w-24 h-24 rounded-3xl bg-black/40 border border-secondary/20 flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                    <img src="/vexor-logo.png" alt="Vexor Logo" className="w-16 h-16 object-contain" />
-                 </div>
-                 <h1 className="font-heading text-4xl font-black text-foreground tracking-tighter uppercase italic">Neural_Access</h1>
-                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary">Secure Command Uplink Required</p>
-              </div>
+            <div className="glass-card p-12 space-y-10 border-white/5 relative overflow-hidden">
+               {/* Build Tracking Tag */}
+               <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
+                 <span className="text-[7px] font-mono tracking-widest uppercase">Build_ID: 2024-04-20_2155_RESILIENT</span>
+               </div>
 
-              <div className="space-y-6">
-                 <div className="space-y-2">
-                    <label className="text-[9px] font-black uppercase tracking-widest text-foreground/40 pl-4 border-l border-secondary">Identity</label>
-                    <input 
-                      type="email" 
-                      placeholder="Admin Email"
-                      value={adminLoginForm.email}
-                      onChange={(e) => setAdminLoginForm({...adminLoginForm, email: e.target.value})}
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-4 focus:border-secondary/40 outline-none transition-all text-sm font-medium"
-                    />
-                 </div>
-                 <div className="space-y-2">
-                    <label className="text-[9px] font-black uppercase tracking-widest text-foreground/40 pl-4 border-l border-secondary">Encryption Key</label>
-                    <input 
-                      type="password" 
-                      placeholder="Admin Password"
-                      value={adminLoginForm.password}
-                      onChange={(e) => setAdminLoginForm({...adminLoginForm, password: e.target.value})}
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-4 focus:border-secondary/40 outline-none transition-all text-sm font-medium"
-                    />
-                 </div>
-                 {loginError && <p className="text-[10px] text-destructive font-black uppercase tracking-widest text-center">{loginError}</p>}
-                 
-                 <button 
-                   onClick={handleAdminLogin}
-                   className="futuristic-button w-full py-5"
-                 >
-                    <span className="relative z-10">INITIALIZE ACCESS</span>
-                    <div className="btn-glow" />
-                 </button>
-              </div>
-           </div>
+               <div className="text-center space-y-4">
+                  <div className="w-24 h-24 rounded-3xl bg-black/40 border border-secondary/20 flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                     <img src="/vexor-logo.png" alt="Vexor Logo" className="w-16 h-16 object-contain" />
+                  </div>
+                  <h1 className="font-heading text-4xl font-black text-foreground tracking-tighter uppercase italic">Neural_Access</h1>
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary">Secure Command Uplink Required</p>
+               </div>
+
+               <div className="space-y-6">
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-foreground/40 pl-4 border-l border-secondary">Identity</label>
+                     <input 
+                       type="email" 
+                       placeholder="Admin Email"
+                       value={adminLoginForm.email}
+                       onChange={(e) => setAdminLoginForm({...adminLoginForm, email: e.target.value})}
+                       className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-4 focus:border-secondary/40 outline-none transition-all text-sm font-medium"
+                     />
+                  </div>
+                  <div className="space-y-2">
+                     <label className="text-[9px] font-black uppercase tracking-widest text-foreground/40 pl-4 border-l border-secondary">Encryption Key</label>
+                     <input 
+                       type="password" 
+                       placeholder="Admin Password"
+                       value={adminLoginForm.password}
+                       onChange={(e) => setAdminLoginForm({...adminLoginForm, password: e.target.value})}
+                       className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-4 focus:border-secondary/40 outline-none transition-all text-sm font-medium"
+                     />
+                  </div>
+                  {loginError && <p className="text-[10px] text-destructive font-black uppercase tracking-widest text-center">{loginError}</p>}
+                  
+                  <button 
+                    onClick={handleAdminLogin}
+                    className="futuristic-button w-full py-5"
+                  >
+                     <span className="relative z-10">{isSaving ? 'UPLOADING PROTOCOLS...' : 'INITIALIZE ACCESS'}</span>
+                     <div className="btn-glow" />
+                  </button>
+
+                  {/* System Override Debug Section */}
+                  <div className="mt-8 pt-8 border-t border-white/5">
+                    <details className="cursor-pointer group">
+                      <summary className="text-[9px] uppercase font-bold tracking-[0.2em] text-foreground/20 group-hover:text-secondary/40 transition-colors list-none text-center">
+                        Diagnostics Terminal
+                      </summary>
+                      <div className="mt-4 p-4 rounded-xl bg-black/40 border border-white/5 space-y-2 text-[10px] font-mono leading-relaxed">
+                        <div className="flex justify-between">
+                          <span className="text-foreground/40">IDENT_PROBE:</span>
+                          <span className={adminLoginForm.email.trim() === 'abhayrana8272@gmail.com' ? 'text-[#39FF14]' : 'text-destructive'}>
+                            {adminLoginForm.email.trim() === 'abhayrana8272@gmail.com' ? 'TOKEN_MATCH' : 'MISMATCH'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-foreground/40">CRYPT_PROBE:</span>
+                          <span className={adminLoginForm.password.trim() === 'vexor@#005' ? 'text-[#39FF14]' : 'text-destructive'}>
+                            {adminLoginForm.password.trim() === 'vexor@#005' ? 'PASS_MATCH' : 'MISMATCH'}
+                          </span>
+                        </div>
+                        <div className="pt-2 text-foreground/20 italic border-t border-white/5 uppercase text-[8px] tracking-widest text-center">
+                          Build_Stamp: 2024-04-20_2155_RESILIENT
+                        </div>
+                        <p className="text-[8px] text-foreground/10 text-center leading-tight">
+                          The Diagnostics Terminal rules out input mismatches or caching during Vercel sync troubleshooting.
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+               </div>
+            </div>
          </motion.div>
       </div>
     );
@@ -383,6 +415,13 @@ export default function AdminDashboardPage() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Persistence Footer Diagnostics */}
+      <div className="fixed bottom-4 left-0 right-0 z-50 pointer-events-none opacity-20">
+        <p className="text-[8px] uppercase tracking-[0.5em] font-bold text-center text-foreground">
+          Core Version 8.0.3-RESILIENT // Build Timestamp: 2024-04-20_2155
+        </p>
+      </div>
 
       {/* NEURAL COMMAND POPUP (CUSTOM UI) */}
       <CommandPopup 

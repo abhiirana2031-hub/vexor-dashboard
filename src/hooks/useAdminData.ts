@@ -32,18 +32,14 @@ export const useAdminData = () => {
 
   const loadAllData = async () => {
     setIsLoading(true);
+    
+    // Failsafe timeout to prevent infinite loading if API hangs
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Synchronization Timeout')), 8000)
+    );
+
     try {
-      const [
-        pRes, 
-        sRes, 
-        tRes, 
-        testRes, 
-        eRes, 
-        statRes, 
-        bRes, 
-        uRes, 
-        aRes
-      ] = await Promise.all([
+      const dataPromise = Promise.all([
         BaseCrudService.getAll<Projects>('projects').catch(() => ({ items: [] })),
         BaseCrudService.getAll<Services>('services').catch(() => ({ items: [] })),
         BaseCrudService.getAll<TeamMembers>('teammembers').catch(() => ({ items: [] })),
@@ -54,6 +50,18 @@ export const useAdminData = () => {
         BaseCrudService.getAll<UserProfiles>('userprofiles').catch(() => ({ items: [] })),
         BaseCrudService.getAll<AuditLogs>('auditlogs').catch(() => ({ items: [] }))
       ]);
+
+      const [
+        pRes, 
+        sRes, 
+        tRes, 
+        testRes, 
+        eRes, 
+        statRes, 
+        bRes, 
+        uRes, 
+        aRes
+      ] = await Promise.race([dataPromise, timeoutPromise]) as any;
 
       setProjects(pRes.items || []);
       setServices(sRes.items || []);
