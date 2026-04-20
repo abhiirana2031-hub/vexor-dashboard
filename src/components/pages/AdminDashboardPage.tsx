@@ -68,9 +68,24 @@ export default function AdminDashboardPage() {
     message: string;
     onConfirm: () => void;
   }>({ isOpen: false, title: '', message: '', onConfirm: () => {} });
+  const [dbProbeResult, setDbProbeResult] = useState<any>(null);
+  const [isProbing, setIsProbing] = useState(false);
 
   const confirmAction = (title: string, message: string, onConfirm: () => void) => {
     setConfirmDialog({ isOpen: true, title, message, onConfirm });
+  };
+
+  const handleDbProbe = async () => {
+    setIsProbing(true);
+    try {
+      const res = await fetch('/api/db-diagnostics');
+      const data = await res.json();
+      setDbProbeResult(data);
+    } catch (err: any) {
+      setDbProbeResult({ status: 'error', error: err.message });
+    } finally {
+      setIsProbing(false);
+    }
   };
 
   const handleEdit = (item: any) => {
@@ -290,10 +305,36 @@ export default function AdminDashboardPage() {
                     initial={{ opacity: 0 }} 
                     animate={{ opacity: 1 }} 
                     exit={{ opacity: 0 }}
-                    className="h-96 flex flex-col items-center justify-center gap-6"
+                    className="h-96 flex flex-col items-center justify-center gap-8"
                   >
                      <LoadingSpinner />
-                     <p className="text-[10px] font-black uppercase tracking-[0.5em] text-foreground/20">Syncing Matrix Streams...</p>
+                     <div className="text-center space-y-4">
+                       <p className="text-[10px] font-black uppercase tracking-[0.5em] text-foreground/20">Syncing Matrix Streams...</p>
+                       <button 
+                         onClick={handleDbProbe}
+                         disabled={isProbing}
+                         className="px-6 py-2 rounded-full border border-white/5 text-[8px] font-black uppercase tracking-widest text-foreground/20 hover:text-secondary hover:border-secondary transition-all"
+                       >
+                         {isProbing ? 'Probing...' : 'Probe Neural Database'}
+                       </button>
+                     </div>
+
+                     {dbProbeResult && (
+                       <div className="max-w-md w-full bg-black/60 border border-white/10 rounded-2xl p-6 text-[9px] font-mono leading-relaxed animate-in fade-in slide-in-from-bottom-2">
+                          <div className="flex justify-between border-b border-white/5 pb-2 mb-4">
+                            <span className="text-secondary uppercase">System Probe Result</span>
+                            <button onClick={() => setDbProbeResult(null)} className="text-foreground/20 hover:text-white">Close</button>
+                          </div>
+                          <pre className="text-foreground/60 whitespace-pre-wrap">
+                            {JSON.stringify(dbProbeResult, null, 2)}
+                          </pre>
+                          {dbProbeResult.status === 'connected' && (!dbProbeResult.collectionsFound || dbProbeResult.collectionsFound.length === 0) && (
+                            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg uppercase text-[8px] font-black">
+                              WARNING: Connection established but target database is EMPTY. Check MONGODB_DB in Vercel.
+                            </div>
+                          )}
+                       </div>
+                     )}
                   </motion.div>
                 ) : (
                   <motion.div

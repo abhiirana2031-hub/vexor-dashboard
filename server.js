@@ -110,9 +110,47 @@ function getCollection(collectionId) {
 app.get('/health', async (req, res) => {
   try {
     await connectDB()
-    res.json({ status: 'ok', db: db ? 'connected' : 'disconnected' })
+    res.json({ 
+      status: 'ok', 
+      db: db ? 'connected' : 'disconnected',
+      databaseName: db?.databaseName || 'unknown'
+    })
   } catch (e) {
     res.status(500).json({ status: 'error', error: e.message })
+  }
+})
+
+// Database Diagnostics for troubleshooting
+app.get('/api/db-diagnostics', async (req, res) => {
+  try {
+    await connectDB()
+    if (!db) throw new Error('Database not connected')
+    
+    // Get all collections in the current database
+    const collections = await db.listCollections().toArray()
+    const stats = []
+    
+    for (const collInfo of collections) {
+      const count = await db.collection(collInfo.name).countDocuments()
+      stats.push({ collection: collInfo.name, count })
+    }
+    
+    res.json({
+      status: 'connected',
+      activeDatabase: db.databaseName,
+      collectionsFound: stats,
+      environment: process.env.VERCEL ? 'vercel' : 'local',
+      config: {
+        uri_provided: !!process.env.MONGODB_URI,
+        db_name_env: process.env.MONGODB_DB || 'DEFAULT (vexor)'
+      }
+    })
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      error: error.message,
+      environment: process.env.VERCEL ? 'vercel' : 'local'
+    })
   }
 })
 
