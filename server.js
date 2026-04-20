@@ -146,6 +146,9 @@ app.get('/api/db-diagnostics', async (req, res) => {
     await connectDB()
     if (!db) throw new Error('Database not connected')
     
+    // Test hardware reachability (Ping)
+    const pingRes = await db.admin().ping().catch(e => ({ error: e.message }))
+    
     // Get all collections in the current database
     const collections = await db.listCollections().toArray()
     const stats = []
@@ -155,14 +158,18 @@ app.get('/api/db-diagnostics', async (req, res) => {
       stats.push({ collection: collInfo.name, count })
     }
     
+    // Mask URI for safe reporting
+    const maskedUri = MONGODB_URI ? MONGODB_URI.replace(/:([^@]+)@/, ':****@') : 'MISSING'
+
     res.json({
       status: 'connected',
       activeDatabase: db.databaseName,
+      ping: pingRes,
       collectionsFound: stats,
       environment: process.env.VERCEL ? 'vercel' : 'local',
       config: {
-        uri_provided: !!process.env.MONGODB_URI,
-        db_name_env: process.env.MONGODB_DB || 'DEFAULT (vexor)'
+        uri_masked: maskedUri,
+        db_name_env: process.env.MONGODB_DB || 'DEFAULT (vexora)'
       }
     })
   } catch (error) {

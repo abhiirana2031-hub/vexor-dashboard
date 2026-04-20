@@ -325,12 +325,39 @@ export default function AdminDashboardPage() {
                             <span className="text-secondary uppercase">System Probe Result</span>
                             <button onClick={() => setDbProbeResult(null)} className="text-foreground/20 hover:text-white">Close</button>
                           </div>
-                          <pre className="text-foreground/60 whitespace-pre-wrap">
-                            {JSON.stringify(dbProbeResult, null, 2)}
+                          
+                          <div className="space-y-4 mb-4">
+                             <div>
+                               <label className="text-foreground/20 uppercase block">Database_Status</label>
+                               <span className={dbProbeResult.status === 'connected' ? 'text-secondary' : 'text-destructive'}>
+                                 {dbProbeResult.status?.toUpperCase()}
+                               </span>
+                             </div>
+                             <div>
+                               <label className="text-foreground/20 uppercase block">Active_Node</label>
+                               <span className="text-foreground/60">{dbProbeResult.activeDatabase || 'UNKNOWN'}</span>
+                             </div>
+                             <div>
+                               <label className="text-foreground/20 uppercase block">Connection_String (Masked)</label>
+                               <span className="text-foreground/40 break-all">{dbProbeResult.config?.uri_masked || 'NOT_FOUND'}</span>
+                             </div>
+                          </div>
+
+                          <pre className="text-foreground/60 whitespace-pre-wrap bg-white/5 p-4 rounded-xl border border-white/5 max-h-40 overflow-y-auto custom-scrollbar uppercase">
+                            {JSON.stringify(dbProbeResult.collectionsFound || dbProbeResult.error, null, 2)}
                           </pre>
+                          
+                          {dbProbeResult.status === 'error' && (
+                             <div className="mt-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive rounded-xl space-y-2">
+                                <p className="font-black">CRITICAL Handshake Failure</p>
+                                <p className="text-[7px]">Possible Cause: MongoDB Atlas Firewall is blocking Vercel. Log in to Atlas, go to "Network Access" and add IP "0.0.0.0/0".</p>
+                             </div>
+                          )}
+
                           {dbProbeResult.status === 'connected' && (!dbProbeResult.collectionsFound || dbProbeResult.collectionsFound.length === 0) && (
-                            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg uppercase text-[8px] font-black">
-                              WARNING: Connection established but target database is EMPTY. Check MONGODB_DB in Vercel.
+                            <div className="mt-4 p-4 bg-secondary/10 border border-secondary/20 text-secondary rounded-xl space-y-2">
+                              <p className="font-black">WARNING: NODE_EMPTY</p>
+                              <p className="text-[7px]">Connected to cluster but database "{dbProbeResult.activeDatabase}" has 0 documents. Check your MONGODB_DB in Vercel settings.</p>
                             </div>
                           )}
                        </div>
