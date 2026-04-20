@@ -241,29 +241,26 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#03050a] flex items-center justify-center relative overflow-hidden font-paragraph py-8 px-4">
+    <div className="h-screen w-screen bg-[#03050a] flex items-center justify-center relative overflow-hidden font-paragraph">
       {/* Global Background Elements */}
       <div className="fixed inset-0 cyber-grid opacity-10 pointer-events-none" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-secondary/5 blur-[150px] pointer-events-none" />
 
-      {/* 75% FOCUSED DASHBOARD WINDOW CONTAINER */}
-      <div className="w-full max-w-[75vw] h-[92vh] bg-background border border-white/10 rounded-[32px] overflow-hidden flex relative z-10 shadow-2xl transition-all duration-700 hover:border-secondary/20 group">
+      {/* FULL SCREEN DASHBOARD CONTAINER */}
+      <div className="w-full h-full bg-background flex relative z-10 overflow-hidden">
         
-        {/* Subtle Window Border Glow */}
-        <div className="absolute inset-0 rounded-[32px] pointer-events-none border border-secondary/5 group-hover:border-secondary/10 transition-colors" />
-
         {/* LEFT SIDEBAR - Desktop */}
         <aside className="w-80 flex-shrink-0 hidden lg:block z-40 relative border-r border-white/5">
           <Sidebar onSetActiveTab={setActiveTab} activeTab={activeTab} />
         </aside>
 
         {/* MAIN CONTENT AREA */}
-        <main className="flex-1 flex flex-col min-w-0 relative h-full">
+        <main className="flex-1 flex flex-col min-w-0 relative h-full overflow-hidden">
           {/* TOPBAR */}
           <Topbar member={member} onToggleSidebar={() => setIsMobileMenuOpen(true)} />
 
-          <div className="flex-1 overflow-y-auto no-scrollbar p-6 lg:p-10 relative custom-scrollbar">
-            <div className="relative z-10 mx-auto w-full max-w-7xl">
+          <div className="flex-1 overflow-y-auto no-scrollbar p-6 lg:p-8 relative custom-scrollbar">
+            <div className="relative z-10 mx-auto w-full max-w-[85%] animate-in fade-in zoom-in-95 duration-500">
               <AnimatePresence mode="wait">
                 {isLoading ? (
                   <motion.div 

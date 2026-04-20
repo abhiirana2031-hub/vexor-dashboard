@@ -59,50 +59,50 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* KPI Cards */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.1 }}
-            className="glass-card hover:border-white/10 p-8 flex flex-col justify-between group relative overflow-hidden"
+            className="glass-card hover:border-white/10 p-5 flex flex-col justify-between group relative overflow-hidden"
           >
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex justify-between items-start mb-4">
               <div 
-                className="w-12 h-12 rounded-xl flex items-center justify-center border border-white/5"
+                className="w-10 h-10 rounded-xl flex items-center justify-center border border-white/5"
                 style={{ backgroundColor: `${card.color}10`, color: card.color }}
               >
-                <card.icon className="w-6 h-6" />
+                <card.icon className="w-5 h-5" />
               </div>
-              <div className="flex items-center gap-1 text-[10px] font-black text-secondary">
-                <ArrowUpRight className="w-3 h-3" />
+              <div className="flex items-center gap-1 text-[9px] font-black text-secondary">
+                <ArrowUpRight className="w-2.5 h-2.5" />
                 {card.growth}
               </div>
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 mb-1">{card.label}</p>
-              <h3 className="text-4xl font-black text-foreground tracking-tighter">{card.value}</h3>
+              <p className="text-[9px] font-black uppercase tracking-widest text-foreground/40 mb-0.5">{card.label}</p>
+              <h3 className="text-2xl font-black text-foreground tracking-tighter">{card.value}</h3>
             </div>
             
             {/* Ambient Back Glow */}
-            <div className="absolute -right-4 -bottom-4 w-24 h-24 blur-3xl opacity-10 rounded-full" style={{ backgroundColor: card.color }} />
+            <div className="absolute -right-4 -bottom-4 w-20 h-20 blur-3xl opacity-10 rounded-full" style={{ backgroundColor: card.color }} />
           </motion.div>
         ))}
       </div>
 
       {/* Charts Section */}
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-6">
         {/* Main Traffic Chart */}
-        <div className="glass-card p-10 h-[400px] flex flex-col">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-sm font-black uppercase tracking-[0.3em] text-foreground/60">Data Flux Matrix</h3>
+        <div className="glass-card p-8 h-[270px] flex flex-col">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground/60">Data Flux Matrix</h3>
             <div className="flex gap-4">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-secondary" />
-                <span className="text-[10px] font-black uppercase text-foreground/40 tracking-widest">Live Streams</span>
+                <span className="text-[9px] font-black uppercase text-foreground/40 tracking-widest">Live Streams</span>
               </div>
             </div>
           </div>
@@ -118,11 +118,11 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
                 <XAxis 
                   dataKey="name" 
-                  stroke="#ffffff20" 
-                  fontSize={10} 
+                  stroke="#ffffff10" 
+                  fontSize={9} 
                   tickLine={false} 
                   axisLine={false}
-                  tick={{ fill: '#ffffff40', fontWeight: '900' }}
+                  tick={{ fill: '#ffffff30', fontWeight: '900' }}
                 />
                 <YAxis hide />
                 <Tooltip 
@@ -130,7 +130,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
                     backgroundColor: '#05070d', 
                     border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: '12px',
-                    fontSize: '10px',
+                    fontSize: '9px',
                     fontWeight: '900',
                     color: '#fff'
                   }}
@@ -140,7 +140,7 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
                   type="monotone" 
                   dataKey="val" 
                   stroke="#00f5ff" 
-                  strokeWidth={3}
+                  strokeWidth={2}
                   fillOpacity={1} 
                   fill="url(#colorVal)" 
                   animationDuration={2000}
@@ -151,10 +151,10 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
         </div>
 
         {/* Growth Bar Chart */}
-        <div className="glass-card p-10 h-[400px] flex flex-col">
-          <div className="flex justify-between items-center mb-8">
-             <h3 className="text-sm font-black uppercase tracking-[0.3em] text-foreground/60">Expansion Node Status</h3>
-             <TrendingUp className="w-5 h-5 text-secondary opacity-40" />
+        <div className="glass-card p-8 h-[270px] flex flex-col">
+          <div className="flex justify-between items-center mb-6">
+             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-foreground/60">Expansion Node Status</h3>
+             <TrendingUp className="w-4 h-4 text-secondary opacity-40" />
           </div>
           <div className="flex-1">
             <ResponsiveContainer width="100%" height="100%">
@@ -162,11 +162,11 @@ export const StatsOverview = ({ stats }: StatsOverviewProps) => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
                 <XAxis 
                   dataKey="name" 
-                  stroke="#ffffff20" 
-                  fontSize={10} 
+                  stroke="#ffffff10" 
+                  fontSize={9} 
                   tickLine={false} 
                   axisLine={false}
-                  tick={{ fill: '#ffffff40', fontWeight: '900' }}
+                  tick={{ fill: '#ffffff30', fontWeight: '900' }}
                 />
                 <YAxis hide />
                 <Tooltip 

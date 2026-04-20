@@ -96,18 +96,24 @@
 /* Smooth Navigation */
 html {
   scroll-behavior: smooth;
-  font-size: 75%; /* Global scaling to 75% as requested */
+  font-size: 80%; /* Updated global scaling to 80% as requested */
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  height: 100%;
 }
 
 @media (min-width: 1024px) {
   html {
-    font-size: 75%; 
+    font-size: 80%; 
   }
 }
 
 @media (max-width: 768px) {
   html {
-    font-size: 70%; 
+    font-size: 80%; 
   }
 }
 

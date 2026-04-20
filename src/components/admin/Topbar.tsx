@@ -9,7 +9,7 @@ interface TopbarProps {
 
 export const Topbar = ({ member, onToggleSidebar }: TopbarProps) => {
   return (
-    <div className="h-20 bg-background/50 backdrop-blur-xl border-b border-white/5 px-4 lg:px-8 flex items-center justify-between relative z-20 gap-4">
+    <div className="h-16 bg-background/50 backdrop-blur-xl border-b border-white/5 px-4 lg:px-8 flex items-center justify-between relative z-20 gap-4">
       {/* Mobile Toggle */}
       {onToggleSidebar && (
         <button onClick={onToggleSidebar} className="p-2 rounded-xl text-foreground/40 hover:text-secondary lg:hidden flex-shrink-0 transition-colors">

@@ -14,10 +14,10 @@ interface ServiceManagerProps {
 export const ServiceManager = ({ services, onAddNew, onEdit, onDelete }: ServiceManagerProps) => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex justify-between items-end border-b border-white/5 pb-8">
+      <div className="flex justify-between items-end border-b border-white/5 pb-4">
         <div>
-          <h2 className="text-3xl font-black text-foreground tracking-tighter mb-2 uppercase">Core Architecture</h2>
-          <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.3em]">Configure service nodes and expertise modules</p>
+          <h2 className="text-2xl font-black text-foreground tracking-tighter mb-1 uppercase">Core Architecture</h2>
+          <p className="text-[9px] font-bold text-foreground/40 uppercase tracking-[0.3em]">Configure service nodes</p>
         </div>
         <button 
           onClick={onAddNew}
@@ -57,10 +57,10 @@ export const ServiceManager = ({ services, onAddNew, onEdit, onDelete }: Service
                 )}
               </div>
 
-              <div className="flex-1 p-10 flex flex-col justify-between">
-                <div className="space-y-4">
+              <div className="flex-1 p-6 flex flex-col justify-between">
+                <div className="space-y-2">
                   <div className="flex justify-between items-start">
-                    <h3 className="text-2xl font-black text-foreground tracking-tighter group-hover:text-secondary transition-colors">
+                    <h3 className="text-xl font-black text-foreground tracking-tighter group-hover:text-secondary transition-colors">
                       {service.serviceName}
                     </h3>
                     {service.isFeatured && (
