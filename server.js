@@ -48,7 +48,12 @@ async function dbMiddleware(req, res, next) {
     await connectDB()
     next()
   } catch (error) {
-    res.status(500).json({ error: 'Database connection failed: ' + error.message })
+    console.error('[DB_MIDDLEWARE_ERROR]:', error.message)
+    res.status(500).json({ 
+      error: 'Database connection failed', 
+      details: error.message,
+      environment: process.env.VERCEL ? 'vercel' : 'local'
+    })
   }
 }
 

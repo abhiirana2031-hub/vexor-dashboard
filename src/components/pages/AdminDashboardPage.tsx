@@ -140,9 +140,19 @@ export default function AdminDashboardPage() {
   const handleAdminLogin = async () => {
     setIsSaving(true);
     setLoginError('');
+    
+    // 1. Check Hardcoded Fallback Credentials First (Ensures access during DB sync issues)
+    const FALLBACK_ADMIN_EMAIL = 'abhayrana8272@gmail.com';
+    const FALLBACK_ADMIN_PASS = 'vexor@#005';
+
+    if (adminLoginForm.email === FALLBACK_ADMIN_EMAIL && adminLoginForm.password === FALLBACK_ADMIN_PASS) {
+      setIsAdminLoggedIn(true);
+      setIsSaving(false);
+      return;
+    }
+
     try {
-      // Since we can't query by email directly, we fetch all users and find the match
-      // Note: In a production app, this should be handled by a dedicated auth endpoint
+      // 2. Database Sync Attempt
       const res = await BaseCrudService.getAll<UserProfiles>('userprofiles');
       const usersList = res.items;
       
@@ -150,15 +160,6 @@ export default function AdminDashboardPage() {
         u.email === adminLoginForm.email && 
         u.passwordHash === adminLoginForm.password
       );
-
-      // FALLBACK: If no database user found, check hardcoded credentials for initial setup
-      const FALLBACK_ADMIN_EMAIL = 'abhayrana8272@gmail.com';
-      const FALLBACK_ADMIN_PASS = 'vexor@#005';
-
-      if (!matchedUser && adminLoginForm.email === FALLBACK_ADMIN_EMAIL && adminLoginForm.password === FALLBACK_ADMIN_PASS) {
-        setIsAdminLoggedIn(true);
-        return;
-      }
 
       if (!matchedUser) {
         setLoginError('Neural handshake failed: Invalid credentials.');
@@ -175,8 +176,10 @@ export default function AdminDashboardPage() {
       // Success
       setActiveAdminUser(matchedUser);
       setIsAdminLoggedIn(true);
-    } catch (err) {
-      setLoginError('Matrix synchronization failure. Please try again.');
+    } catch (err: any) {
+      console.error('Login sync error:', err);
+      // Display the actual error message for better diagnostics
+      setLoginError(`Matrix synchronization failure: ${err.message || 'Unknown protocol error'}`);
     } finally {
       setIsSaving(false);
     }
