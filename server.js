@@ -100,10 +100,30 @@ async function connectDB() {
   }
 }
 
-// Get collection with error handling
-function getCollection(collectionId) {
-  if (!db) throw new Error('Database not initialized')
-  return db.collection(collectionId)
+// Get collection with smart case-insensitivity mapping
+async function resolveCollection(collectionId) {
+  if (!db) throw new Error('Database not initialized');
+  
+  // Get all collection names in the current database
+  const collections = await db.listCollections().toArray();
+  const collectionNames = collections.map(c => c.name);
+  
+  // 1. Try exact match
+  if (collectionNames.includes(collectionId)) {
+    console.log(`[DB_RESOLVE]: Exact match found for [${collectionId}]`);
+    return db.collection(collectionId);
+  }
+  
+  // 2. Try case-insensitive match
+  const fuzzyMatch = collectionNames.find(c => c.toLowerCase() === collectionId.toLowerCase());
+  if (fuzzyMatch) {
+    console.log(`[DB_RESOLVE]: Fuzzy match for [${collectionId}] -> [${fuzzyMatch}]`);
+    return db.collection(fuzzyMatch);
+  }
+  
+  // 3. Fallback to requested name (will return empty cursor if missing)
+  console.warn(`[DB_RESOLVE]: No match found for [${collectionId}]. Attempting fallback...`);
+  return db.collection(collectionId);
 }
 
 // Health check
@@ -169,17 +189,17 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 // GET all items with pagination
 app.get('/api/cms/:collectionId', async (req, res) => {
   try {
-    const { collectionId } = req.params
-    const limit = Math.min(parseInt(req.query.limit) || 50, 1000)
-    const skip = parseInt(req.query.skip) || 0
+    const { collectionId } = req.params;
+    const limit = Math.min(parseInt(req.query.limit) || 50, 1000);
+    const skip = parseInt(req.query.skip) || 0;
 
-    const collection = getCollection(collectionId)
-    const totalCount = await collection.countDocuments()
+    const collection = await resolveCollection(collectionId);
+    const totalCount = await collection.countDocuments();
     const items = await collection
       .find({})
       .skip(skip)
       .limit(limit)
-      .toArray()
+      .toArray();
 
     res.json({
       items,
@@ -188,12 +208,12 @@ app.get('/api/cms/:collectionId', async (req, res) => {
       currentPage: Math.floor(skip / limit),
       pageSize: limit,
       nextSkip: skip + limit < totalCount ? skip + limit : null,
-    })
+    });
   } catch (error) {
-    console.error('GET error:', error)
-    res.status(500).json({ error: error.message })
+    console.error(`[GET_COLLECTION_ERROR] [${req.params.collectionId}]:`, error);
+    res.status(500).json({ error: error.message });
   }
-})
+});
 
 // GET single item by ID
 app.get('/api/cms/:collectionId/:itemId', async (req, res) => {
