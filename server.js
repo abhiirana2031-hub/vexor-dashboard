@@ -35,7 +35,7 @@ if (fs.existsSync(distPath)) {
 
 const uploadsPath = process.env.VERCEL 
   ? '/tmp' 
-  : path.join(__dirname, 'public/uploads')
+  : path.join(__dirname, 'uploads')
 
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true })
