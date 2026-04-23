@@ -23,35 +23,46 @@ export const UserManager = ({ users, onDelete, onEdit }: UserManagerProps) => {
         <AnimatePresence mode="popLayout">
           {users.map((user, idx) => {
              // Fallbacks matching UserProfiles schema
-             const name = user.fullName || (user as any).nickname || 'Classified User';
-             const role = user.jobTitle || 'Standard Access';
-             const lastActive = 'Active recently'; // Hardcoded for demo/simplicity
+              const name = user.fullName || (user as any).nickname || 'Classified User';
+              const roleDisplay = user.role === 'admin' ? 'Strategic Commandant' : 'Standard Operative';
+              const lastActive = 'Active recently'; 
 
-             return (
-               <motion.div
-                 key={user._id}
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 exit={{ opacity: 0, scale: 0.95 }}
-                 transition={{ delay: idx * 0.05 }}
-                 className="glass-card flex p-6 gap-6 items-center border-white/5 group relative overflow-hidden"
-               >
-                 <div className="w-16 h-16 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:border-secondary/40 transition-colors overflow-hidden">
-                    {user.profilePhoto ? (
-                       <img src={user.profilePhoto} alt="profile" className="w-full h-full object-cover transition-all" />
-                    ) : (
-                       <UserCircle className="w-8 h-8 text-foreground/40 group-hover:text-secondary" />
-                    )}
-                 </div>
+              return (
+                <motion.div
+                  key={user._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="glass-card flex p-6 gap-6 items-center border-white/5 group relative overflow-hidden"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:border-secondary/40 transition-all overflow-hidden relative">
+                     {user.profilePhoto ? (
+                        <img src={user.profilePhoto} alt="profile" className="w-full h-full object-cover transition-all group-hover:scale-110" />
+                     ) : (
+                        <UserCircle className="w-8 h-8 text-foreground/20 group-hover:text-secondary/60" />
+                     )}
+                     
+                     {user.isVerified && (
+                        <div className="absolute bottom-0 right-0 w-5 h-5 bg-[#39FF14] rounded-full border-2 border-[#03050a] flex items-center justify-center">
+                           <ShieldCheck className="w-3 h-3 text-black" />
+                        </div>
+                     )}
+                  </div>
 
-                 <div className="flex-1 space-y-1 overflow-hidden">
-                    <h3 className="font-heading text-lg font-black tracking-tight text-foreground truncate">{name}</h3>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-secondary">{role}</p>
-                    <div className="flex items-center gap-2 pt-2 text-foreground/40 text-xs">
-                       <Activity className="w-3 h-3 text-neon-green animate-pulse" />
-                       <span className="truncate">{lastActive}</span>
-                    </div>
-                 </div>
+                  <div className="flex-1 space-y-1 overflow-hidden">
+                     <div className="flex items-center gap-3">
+                        <h3 className="font-heading text-lg font-black tracking-tighter text-foreground uppercase truncate italic">{name}</h3>
+                        {user.role === 'admin' && (
+                           <span className="px-2 py-0.5 rounded bg-secondary/10 border border-secondary/20 text-[7px] font-black uppercase text-secondary">Admin</span>
+                        )}
+                     </div>
+                     <p className="text-[9px] font-black uppercase tracking-widest text-foreground/40">{roleDisplay}</p>
+                     <div className="flex items-center gap-2 pt-2 text-foreground/20 text-[9px] font-bold uppercase tracking-widest">
+                        <Activity className="w-2.5 h-2.5 text-secondary animate-pulse" />
+                        <span className="truncate">{lastActive}</span>
+                     </div>
+                  </div>
 
                  <div className="absolute right-6 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2">
                     <button 

@@ -220,11 +220,21 @@ export const ScannerView = () => {
               <div id={SCANNER_ID} className="w-full h-full rounded-lg overflow-hidden relative z-0" />
               
               {/* Scanning Ray Filter */}
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-secondary/5 to-transparent opacity-20" />
-              <div className="absolute top-0 left-0 w-full h-1 bg-secondary shadow-neon-cyan animate-scanner z-10" />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-secondary/10 to-transparent opacity-30 z-10" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-secondary shadow-neon-cyan animate-scanner z-20" />
               
-              <div className="absolute bottom-6 left-0 w-full text-center">
-                 <p className="text-[9px] font-black uppercase tracking-[0.5em] text-secondary animate-pulse">Scanning_Active</p>
+              {/* Pulse Echo Effect */}
+              <motion.div 
+                className="absolute inset-0 border-2 border-secondary/0 rounded-lg pointer-events-none z-10"
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  borderColor: ['rgba(0, 217, 255, 0)', 'rgba(0, 217, 255, 0.2)', 'rgba(0, 217, 255, 0)']
+                }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              <div className="absolute bottom-6 left-0 w-full text-center z-20">
+                 <p className="text-[9px] font-black uppercase tracking-[0.5em] text-secondary animate-pulse shadow-neon-cyan">Scanning_Active</p>
               </div>
             </motion.div>
           )}

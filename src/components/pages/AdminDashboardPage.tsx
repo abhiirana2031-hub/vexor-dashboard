@@ -24,6 +24,7 @@ import { TestimonialForm } from '@/components/admin/Dialogs/TestimonialForm';
 import { ScannerView } from '@/components/admin/TabViews/ScannerView';
 import { ActivityLogManager } from '@/components/admin/TabViews/ActivityLogManager';
 import { CommandPopup } from '@/components/admin/Dialogs/CommandPopup';
+import { TransmissionPopup } from '@/components/admin/TransmissionPopup';
 import { BaseCrudService } from '@/integrations';
 
 // Original UI (Simplified for reuse or placeholders)
@@ -70,6 +71,7 @@ export default function AdminDashboardPage() {
   }>({ isOpen: false, title: '', message: '', onConfirm: () => {} });
   const [dbProbeResult, setDbProbeResult] = useState<any>(null);
   const [isProbing, setIsProbing] = useState(false);
+  const [showTransmissionSuccess, setShowTransmissionSuccess] = useState(false);
 
   const confirmAction = (title: string, message: string, onConfirm: () => void) => {
     setConfirmDialog({ isOpen: true, title, message, onConfirm });
@@ -134,6 +136,7 @@ export default function AdminDashboardPage() {
     if (success) {
       setIsDialogOpen(false);
       setSelectedItem(null);
+      setShowTransmissionSuccess(true);
     }
     setIsSaving(false);
   };
@@ -506,6 +509,10 @@ export default function AdminDashboardPage() {
           )}
         </DialogContent>
       </Dialog>
+      <TransmissionPopup 
+        isOpen={showTransmissionSuccess} 
+        onClose={() => setShowTransmissionSuccess(false)} 
+      />
     </div>
   );
 }

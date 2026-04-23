@@ -140,6 +140,26 @@ app.get('/health', async (req, res) => {
   }
 })
 
+// Site Stats Endpoint
+app.get('/api/sitestats', async (req, res) => {
+  try {
+    await connectDB()
+    const stats = {
+      projects: await (await resolveCollection('projects')).countDocuments(),
+      services: await (await resolveCollection('services')).countDocuments(),
+      team: await (await resolveCollection('teammembers')).countDocuments(),
+      testimonials: await (await resolveCollection('testimonials')).countDocuments(),
+      users: await (await resolveCollection('userprofiles')).countDocuments(),
+      blogs: await (await resolveCollection('blogs')).countDocuments(),
+      enquiries: await (await resolveCollection('enquiries')).countDocuments(),
+      auditLogs: await (await resolveCollection('auditlogs')).countDocuments(),
+    }
+    res.json(stats)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 // Database Diagnostics for troubleshooting
 app.get('/api/db-diagnostics', async (req, res) => {
   try {
@@ -227,7 +247,7 @@ app.get('/api/cms/:collectionId/:itemId', async (req, res) => {
   try {
     const { collectionId, itemId } = req.params
 
-    const collection = getCollection(collectionId)
+    const collection = await resolveCollection(collectionId)
     
     // Try to handle ObjectId if it's a valid hex string, otherwise use string id
     let queryId;
@@ -258,7 +278,7 @@ app.post('/api/cms/:collectionId', async (req, res) => {
     const { collectionId } = req.params
     const itemData = req.body
 
-    const collection = getCollection(collectionId)
+    const collection = await resolveCollection(collectionId)
     const result = await collection.insertOne({
       ...itemData,
       createdAt: new Date(),
@@ -282,7 +302,7 @@ app.patch('/api/cms/:collectionId/:itemId', async (req, res) => {
     // Remove _id from update data to avoid conflicts
     const { _id, ...updateData } = itemData
 
-    const collection = getCollection(collectionId)
+    const collection = await resolveCollection(collectionId)
     console.log(`[DB] Updating ${collectionId}:${itemId}`)
     
     // Try to handle ObjectId if it's a valid hex string, otherwise use string id
@@ -300,7 +320,7 @@ app.patch('/api/cms/:collectionId/:itemId', async (req, res) => {
       {
         $set: {
           ...updateData,
-          _updatedDate: new Date(),
+          updatedAt: new Date(),
         },
       },
       { returnDocument: 'after' }
@@ -322,7 +342,7 @@ app.delete('/api/cms/:collectionId/:itemId', async (req, res) => {
   try {
     const { collectionId, itemId } = req.params
 
-    const collection = getCollection(collectionId)
+    const collection = await resolveCollection(collectionId)
     console.log(`[DB] Deleting ${collectionId}:${itemId}`)
 
     // Try to handle ObjectId if it's a valid hex string, otherwise use string id
@@ -347,6 +367,7 @@ app.delete('/api/cms/:collectionId/:itemId', async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 })
+
 
 // Catch-all route to serve React app
 if (fs.existsSync(distPath)) {

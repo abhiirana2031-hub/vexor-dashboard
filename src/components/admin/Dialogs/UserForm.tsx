@@ -22,6 +22,7 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
     bio: user?.bio || '',
     profilePhoto: user?.profilePhoto || '',
     role: user?.role || 'user',
+    isVerified: user?.isVerified || false,
   });
   
   const [availableProjects, setAvailableProjects] = useState<Projects[]>([]);
@@ -39,6 +40,7 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
       bio: user?.bio || '',
       profilePhoto: user?.profilePhoto || '',
       role: user?.role || 'user',
+      isVerified: user?.isVerified || false,
     });
 
     // Fetch all projects to let the admin assign them to this user
@@ -132,6 +134,17 @@ export const UserForm = ({ user, onSave, onCancel, isSaving }: UserFormProps) =>
             <option value="admin" className="bg-[#03050a]">Strategic Commandant (Admin)</option>
           </select>
           <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest pt-2">Warning: Admins gain full neural bypass over all system collections.</p>
+        </div>
+
+        <div className="flex items-center space-x-3 md:col-span-2">
+          <input 
+            type="checkbox" 
+            id="isVerified"
+            checked={formData.isVerified}
+            onChange={(e) => setFormData({...formData, isVerified: e.target.checked})}
+            className="w-4 h-4 rounded border-white/10 bg-white/5 text-secondary focus:ring-secondary"
+          />
+          <Label htmlFor="isVerified" className="text-[10px] font-black uppercase tracking-widest text-foreground/60 cursor-pointer">Verified Neural Profile</Label>
         </div>
 
         {/* Project Assignment */}
